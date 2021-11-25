@@ -1,7 +1,7 @@
-import LoginAdmin from "../components/Admin/loginAdmin";
+import Welcome from "../components/Welcome";
 
-export default function LoginAdminPage() {
-  return (
-    <LoginAdmin/>
-  )
-}
+const WelcomePage = () => {
+  return <Welcome/>
+};
+
+export default WelcomePage;

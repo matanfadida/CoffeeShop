@@ -1,8 +1,7 @@
-export default function Home() {
+import LoginAdmin from "../components/Admin/loginAdmin";
+
+export default function LoginAdminPage() {
   return (
-    <div>
-      <h1>hey test!</h1>
-      <p>test</p>
-    </div>
+    <LoginAdmin/>
   )
 }

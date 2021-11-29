@@ -6,50 +6,50 @@ const AddItems = () => {
     const id = 1;
   const ctx = useContext(AuthContext);
   const router = useRouter();
-  const [enteredName, setEnteredName] = useState("");
-  const [enteredTitle, setEnteredTitle] = useState("");
+  const [enteredDescription, setEnteredDescription] = useState("");
+  const [enteredImage, setEnteredImage] = useState("");
   const [enteredPrice, setEnteredPrice] = useState(0);
-  const [enteredCup, setEnteredCup] = useState("");
+  const [enteredAvailability, setEnteredAvailability] = useState("");
 
   const addItemSubmitHandler = (event) => {
     event.preventDefault();
     id += 1;
-    console.log(enteredName, enteredTitle, enteredPrice, enteredCup);
+    console.log(enteredDescription, enteredImage, enteredPrice, enteredAvailability);
     const item = {
       id: id,
-      name: enteredName,
-      title: enteredTitle,
+      description: enteredDescription,
+      image: enteredImage,
       price: enteredPrice,
-      cup: enteredCup,
+      availability: enteredAvailability,
     };
     
     ctx.addItems(item);
-    router.push('/Menu');
+    router.push('/adminlogin/Menu');
   };
-  const nameEnteredHandler = (event) => {
-    setEnteredName(event.target.value);
+  const descriptionEnteredHandler = (event) => {
+    setEnteredDescription(event.target.value);
   };
-  const titleEnteredHandler = (event) => {
-    setEnteredTitle(event.target.value);
+  const imageEnteredHandler = (event) => {
+    setEnteredImage(event.target.value);
   };
   const priceEnteredHandler = (event) => {
     setEnteredPrice(event.target.value);
   };
-  const cupEnteredHandler = (event) => {
-    setEnteredCup(event.target.value);
+  const availabilityEnteredHandler = (event) => {
+    setEnteredAvailability(event.target.value);
   };
 
   return (
     <form onSubmit={addItemSubmitHandler}>
       <div>
-        <label>name:</label>
-        <input type="text" onChange={nameEnteredHandler} />
-        <label>title:</label>
-        <input type="text" onChange={titleEnteredHandler} />
+        <label>description:</label>
+        <input type="text" onChange={descriptionEnteredHandler} />
+        <label>image:</label>
+        <input type="text" onChange={imageEnteredHandler} />
         <label>price:</label>
         <input type="float" onChange={priceEnteredHandler} />
-        <label>cup:</label>
-        <input type="text" onChange={cupEnteredHandler} />
+        <label>availability:</label>
+        <input type="text" onChange={availabilityEnteredHandler} />
       </div>
       <button type="submit">Add</button>
     </form>

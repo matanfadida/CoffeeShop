@@ -3,10 +3,11 @@ import React, { useState } from "react";
 const ITEMSDUMMY = [
   {
     id: "1",
-    name: "coffee",
-    title: "coffee",
+    description:
+      "Espresso shots topped with hot water create a light layer of crema culminating in this wonderfully rich cup with depth and nuance. Pro Tip: For an additional boost, ask your barista to try this with an extra shot.",
+    image: "Caffè Americano",
     price: "5.90",
-    cup: "medium",
+    availability: "yes",
   },
 ];
 
@@ -27,10 +28,10 @@ export const AuthContextProvider = (props) => {
   };
 
   const removeItemHandler = (id) => {
-      setItems(prevItems => {
-          const newItems = prevItems.filter(item => item.id !== id);
-          return newItems;
-      })
+    setItems((prevItems) => {
+      const newItems = prevItems.filter((item) => item.id !== id);
+      return newItems;
+    });
   };
 
   const chengedPrice = (id, newPrice) => {

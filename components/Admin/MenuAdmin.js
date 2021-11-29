@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
-import Link from 'next/link';
-import ShowItems from "./ShowItems";
+import { useContext } from "react";
+import Link from "next/link";
+import ShowItems from "../Menu/ShowItems";
 import AuthContext from "../state/auth-context";
 
-const Menu = () => {
+const MenuAdmin = () => {
   const ctx = useContext(AuthContext);
 
   return (
@@ -12,10 +12,10 @@ const Menu = () => {
         <ShowItems
           key={item.id}
           id={item.id}
-          name={item.name}
-          title={item.title}
+          description={item.description}
+          image={item.image}
           price={item.price}
-          cup={item.cup}
+          availability={item.availability}
         />
       ))}
       <Link href="/additems">add</Link>
@@ -23,4 +23,4 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export default MenuAdmin;

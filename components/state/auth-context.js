@@ -1,47 +1,57 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 
 const ITEMSDUMMY = [
-    {
-      id: "1",
-      name: "coffee",
-      title: "coffee",
-      price: "5.90",
-      cup: "medium",
-    },
-  ];
+  {
+    id: "1",
+    name: "coffee",
+    title: "coffee",
+    price: "5.90",
+    cup: "medium",
+  },
+];
 
 const AuthContext = React.createContext({
+  items: [],
   addItems: (item) => {},
+  removeItem: (id) => {},
+  chengedPrice: (id, newPrice) => {},
 });
 
 export const AuthContextProvider = (props) => {
-    const [items, setItems] = useState(ITEMSDUMMY);
+  const [items, setItems] = useState(ITEMSDUMMY);
 
-    const addItemsHandler = (item) => {
-        setItems()
+  const addItemsHandler = (item) => {
+    const updateItems = [...items];
+    updateItems.push(item);
+    setItems(updateItems);
+  };
+
+  const removeItemHandler = (id) => {
+      setItems(prevItems => {
+          const newItems = prevItems.filter(item => item.id !== id);
+          return newItems;
+      })
+  };
+
+  const chengedPrice = (id, newPrice) => {
+    for (const index in items) {
+      if (items[index].id == id) items[index].price = newPrice;
     }
+    console.log(items);
+  };
 
-    useEffect(() => {
-        const fetchItems = async () => {
-         const response = await fatch("https://coffee-project-6ee0d-default-rtdb.firebaseio.com/items.json");
-         if (!response){
-             throw new Error("Request failed!!");
-         }
-         const items = [];
-         const data = await response.json();
-         for (const item in data){
-             items.push({id: item, name: data[item].name, title: data[item].title, price: data[item].price, cup: data[item].cup})
-            }
-            setItems(items);
-        }
-        fetchMeals().catch((error) => {console.log(error)})
-            // setLoading(true);
-            // setHasError(error.message || "Something went wrong!");
-    }, [])
-
-    return <AuthContext.Provider value={}>
-        {props.children}
+  return (
+    <AuthContext.Provider
+      value={{
+        items,
+        addItems: addItemsHandler,
+        removeItem: removeItemHandler,
+        chengedPrice,
+      }}
+    >
+      {props.children}
     </AuthContext.Provider>
-}
+  );
+};
 
 export default AuthContext;

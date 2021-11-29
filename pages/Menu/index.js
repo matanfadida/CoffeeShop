@@ -1,4 +1,4 @@
-import Menu from "../../components/Munu/Menu";
+import Menu from "../../components/Menu/Menu";
 
 const MenuPage = () => {
     return <Menu/>

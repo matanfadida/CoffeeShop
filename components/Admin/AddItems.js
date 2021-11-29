@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useRouter } from 'next/router';
+import AuthContext from "../state/auth-context";
 
 const AddItems = () => {
+    const id = 1;
+  const ctx = useContext(AuthContext);
+  const router = useRouter();
   const [enteredName, setEnteredName] = useState("");
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredPrice, setEnteredPrice] = useState(0);
@@ -8,7 +13,18 @@ const AddItems = () => {
 
   const addItemSubmitHandler = (event) => {
     event.preventDefault();
+    id += 1;
     console.log(enteredName, enteredTitle, enteredPrice, enteredCup);
+    const item = {
+      id: id,
+      name: enteredName,
+      title: enteredTitle,
+      price: enteredPrice,
+      cup: enteredCup,
+    };
+    
+    ctx.addItems(item);
+    router.push('/Menu');
   };
   const nameEnteredHandler = (event) => {
     setEnteredName(event.target.value);

@@ -8,7 +8,7 @@ const Register = () => {
 
   const onSubmitHandlerRegister = (event) => {
     event.preventDefault();
-    console.log(enteredEmail, enteredPassword);
+    fetch("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]");
   };
 
   const enteredEmailHandler = (event) => {
@@ -22,8 +22,8 @@ const Register = () => {
     <Card ClassName={style.form}>
       <form onSubmit={onSubmitHandlerRegister}>
         <div>
-          <h3>Register</h3>
-          <div>
+          <h1>Register</h1>
+          <div className={style.control}>
             <label>Email</label>
             <input
               type="email"
@@ -31,7 +31,7 @@ const Register = () => {
               onChange={enteredEmailHandler}
             />
           </div>
-          <div>
+          <div className={style.control}>
             <label>Password</label>
             <input
               type="password"
@@ -39,7 +39,7 @@ const Register = () => {
               onChange={enteredPasswordHandler}
             />
           </div>
-          <div>
+          <div className={style.control}>
             <label>Age</label>
             <input
               type="number"

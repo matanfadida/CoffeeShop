@@ -23,8 +23,8 @@ const LoginAdmin = () => {
     <Card ClassName={style.form}>
       <form onSubmit={onSubmitHandlerLogin}>
         <div>
-          <h3>Login</h3>
-          <div>
+          <h1>Login</h1>
+          <div className={style.control}>
             <label>Email</label>
             <input
               type="email"
@@ -32,7 +32,7 @@ const LoginAdmin = () => {
               onChange={enteredEmailHandler}
             />
           </div>
-          <div>
+          <div className={style.control}>
             <label>Password</label>
             <input
               type="password"

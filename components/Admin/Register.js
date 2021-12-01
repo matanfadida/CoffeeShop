@@ -1,13 +1,12 @@
 import { useState } from "react";
 import Card from "../UI/Card";
+import style from "../Admin/LoginAdmin.module.css";
 
-import style from './LoginAdmin.module.css';
-
-const LoginAdmin = () => {
+const Register = () => {
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
 
-  const onSubmitHandlerLogin = (event) => {
+  const onSubmitHandlerRegister = (event) => {
     event.preventDefault();
     console.log(enteredEmail, enteredPassword);
   };
@@ -21,9 +20,9 @@ const LoginAdmin = () => {
   };
   return (
     <Card ClassName={style.form}>
-      <form onSubmit={onSubmitHandlerLogin}>
+      <form onSubmit={onSubmitHandlerRegister}>
         <div>
-          <h3>Login</h3>
+          <h3>Register</h3>
           <div>
             <label>Email</label>
             <input
@@ -40,11 +39,19 @@ const LoginAdmin = () => {
               onChange={enteredPasswordHandler}
             />
           </div>
-          <button type="submit">Login</button>
+          <div>
+            <label>Age</label>
+            <input
+              type="number"
+              id="age"
+              onChange={enteredEmailHandler}
+            />
+          </div>
+          <button type="submit">Register</button>
         </div>
       </form>
     </Card>
   );
 };
 
-export default LoginAdmin;
+export default Register;

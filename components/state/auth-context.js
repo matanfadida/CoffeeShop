@@ -5,7 +5,7 @@ const ITEMSDUMMY = [
     id: "1",
     description:
       "Espresso shots topped with hot water create a light layer of crema culminating in this wonderfully rich cup with depth and nuance. Pro Tip: For an additional boost, ask your barista to try this with an extra shot.",
-    image: "Caffè Americano",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/1200px-A_small_cup_of_coffee.JPG",
     price: "5.90",
     availability: "yes",
   },

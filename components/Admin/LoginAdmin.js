@@ -1,15 +1,21 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import AuthContext from "../state/auth-context";
 import Card from "../UI/Card";
 
-import style from './LoginAdmin.module.css';
+import style from "./LoginAdmin.module.css";
 
 const LoginAdmin = () => {
+  const ctx = useContext(AuthContext);
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
 
   const onSubmitHandlerLogin = (event) => {
     event.preventDefault();
-    console.log(enteredEmail, enteredPassword);
+    ctx.fatchAute(
+      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAvxSQfTowm4dkpC0jqSnzCEtzSOEy2ukU",
+      enteredEmail,
+      enteredPassword
+    );
   };
 
   const enteredEmailHandler = (event) => {
@@ -26,11 +32,7 @@ const LoginAdmin = () => {
           <h1>Login</h1>
           <div className={style.control}>
             <label>Email</label>
-            <input
-              type="email"
-              id="email"
-              onChange={enteredEmailHandler}
-            />
+            <input type="email" id="email" onChange={enteredEmailHandler} />
           </div>
           <div className={style.control}>
             <label>Password</label>
@@ -40,6 +42,7 @@ const LoginAdmin = () => {
               onChange={enteredPasswordHandler}
             />
           </div>
+          {ctx.Loading && <label>Loading...</label>}
           <button type="submit">Login</button>
         </div>
       </form>

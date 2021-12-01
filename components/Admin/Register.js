@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Card from "../UI/Card";
 import style from "../Admin/LoginAdmin.module.css";
+import AuthContext from "../state/auth-context";
 
 const Register = () => {
+  const ctx = useContext(AuthContext);
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
 
   const onSubmitHandlerRegister = (event) => {
     event.preventDefault();
-    fetch("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]");
+    ctx.fatchAute(
+      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAvxSQfTowm4dkpC0jqSnzCEtzSOEy2ukU",
+      enteredEmail,
+      enteredPassword
+    );
   };
 
   const enteredEmailHandler = (event) => {
@@ -25,11 +31,7 @@ const Register = () => {
           <h1>Register</h1>
           <div className={style.control}>
             <label>Email</label>
-            <input
-              type="email"
-              id="email"
-              onChange={enteredEmailHandler}
-            />
+            <input type="email" id="email" onChange={enteredEmailHandler} />
           </div>
           <div className={style.control}>
             <label>Password</label>
@@ -39,14 +41,11 @@ const Register = () => {
               onChange={enteredPasswordHandler}
             />
           </div>
-          <div className={style.control}>
+          {ctx.Loading && <label>Loading...</label>}
+          {/* <div className={style.control}>
             <label>Age</label>
-            <input
-              type="number"
-              id="age"
-              onChange={enteredEmailHandler}
-            />
-          </div>
+            <input type="number" id="age" onChange={enteredEmailHandler} />
+          </div> */}
           <button type="submit">Register</button>
         </div>
       </form>

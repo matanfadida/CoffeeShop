@@ -3,6 +3,8 @@ import AuthContext from "../state/auth-context";
 import Card from "../UI/Card";
 
 import style from "./LoginAdmin.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const LoginAdmin = () => {
   const ctx = useContext(AuthContext);
@@ -42,8 +44,14 @@ const LoginAdmin = () => {
               onChange={enteredPasswordHandler}
             />
           </div>
-          {ctx.Loading && <label>Loading...</label>}
-          <button type="submit">Login</button>
+
+          <div className={style.actions}>
+            {ctx.Loading ? (
+              <FontAwesomeIcon icon={faSpinner} size='2x' spin={true} />
+            ) : (
+              <button type="submit">Login</button>
+            )}
+          </div>
         </div>
       </form>
     </Card>

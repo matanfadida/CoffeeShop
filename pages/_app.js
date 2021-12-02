@@ -1,11 +1,16 @@
+import { Fragment } from "react";
+import Header from "../components/MainHeader/Header";
 import { AuthContextProvider } from "../components/state/auth-context";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <AuthContextProvider>
-      <Component {...pageProps} />
-    </AuthContextProvider>
+    <Fragment>
+      <Header />
+      <AuthContextProvider>
+        <Component {...pageProps} />
+      </AuthContextProvider>
+    </Fragment>
   );
 }
 

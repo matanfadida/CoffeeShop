@@ -19,11 +19,26 @@ const AuthContext = React.createContext({
   chengedPrice: (id, newPrice) => {},
   fatchAute: (url) => {},
   Loading: false,
+  isLoggedIn: false,
+  token: "",
+  login: (token) => {},
+  logout: () => {},
 });
 
 export const AuthContextProvider = (props) => {
   const [items, setItems] = useState(ITEMSDUMMY);
   const [Loading, setLoading] = useState(false);
+  const [token, setToken] = useState(null);
+
+  const userIsLoggedIn = !!token;
+
+  const isLoginHandler = (token) => {
+    setToken(token);
+  };
+
+  const isLogoutHanlder = () => {
+    setToken(null);
+  };
 
   const addItemsHandler = (item) => {
     const updateItems = [...items];
@@ -78,17 +93,21 @@ export const AuthContextProvider = (props) => {
     console.log(items);
   };
 
+  const contextValue = {
+    items,
+    addItems: addItemsHandler,
+    removeItem: removeItemHandler,
+    chengedPrice,
+    fatchAute,
+    Loading,
+    isLoggedIn: userIsLoggedIn,
+    token: token,
+    login: isLoginHandler,
+    logout: isLogoutHanlder,
+  };
+
   return (
-    <AuthContext.Provider
-      value={{
-        items,
-        addItems: addItemsHandler,
-        removeItem: removeItemHandler,
-        chengedPrice,
-        fatchAute,
-        Loading,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {props.children}
     </AuthContext.Provider>
   );

@@ -1,20 +1,28 @@
 import { useContext, useState } from "react";
 import Card from "../UI/Card";
-import style from "../Admin/LoginAdmin.module.css";
 import AuthContext from "../state/auth-context";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import style from "../Admin/LoginAdmin.module.css";
 
 const Register = () => {
   const ctx = useContext(AuthContext);
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
 
-  const onSubmitHandlerRegister = (event) => {
+  const onSubmitHandlerRegister = async (event) => {
     event.preventDefault();
-    ctx.fatchAute(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAvxSQfTowm4dkpC0jqSnzCEtzSOEy2ukU",
-      enteredEmail,
-      enteredPassword
-    );
+    try {
+      const result = ctx.fatchAute(
+        "/api/auth/signup",
+        enteredEmail,
+        enteredPassword
+      );
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const enteredEmailHandler = (event) => {
@@ -41,12 +49,17 @@ const Register = () => {
               onChange={enteredPasswordHandler}
             />
           </div>
-          {ctx.Loading && <label>Loading...</label>}
           {/* <div className={style.control}>
             <label>Age</label>
             <input type="number" id="age" onChange={enteredEmailHandler} />
           </div> */}
-          <button type="submit">Register</button>
+          <div className={style.actions}>
+            {ctx.Loading ? (
+              <FontAwesomeIcon icon={faSpinner} size="2x" spin={true} />
+            ) : (
+              <button type="submit">Register</button>
+            )}
+          </div>
         </div>
       </form>
     </Card>

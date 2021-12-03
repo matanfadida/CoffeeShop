@@ -53,37 +53,57 @@ export const AuthContextProvider = (props) => {
     });
   };
 
-  const fatchAute = (url, enteredEmail, enteredPassword) => {
+   const fatchAute = async(url, enteredEmail, enteredPassword) => {
     setLoading(true);
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify({
-        email: enteredEmail,
-        password: enteredPassword,
-        returnSecureToken: true,
-      }),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => {
-        setLoading(false);
-        if (res.ok) {
-          return res.json();
-        } else {
-          return res.json().then((data) => {
-            let errorMessage = "Authentication failed !";
-            if (data && data.error && data.error.message) {
-              errorMessage = data.error.message;
-            }
-            throw new Error(errorMessage);
-          });
-        }
+    const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          email: enteredEmail,
+          password: enteredPassword,
+        }),
+        headers: { "Content-Type": "application/json" },
       })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        alert(err.message);
-      });
+      
+    const data = response.json();
+
+    if(!response.ok){
+      throw new Error(data.message || "Error")
+    }
+    console.log(data);
+    setLoading(false);
+    return data;
+
+
+
+    // fetch(url, {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     email: enteredEmail,
+    //     password: enteredPassword,
+    //     returnSecureToken: true,
+    //   }),
+    //   headers: { "Content-Type": "application/json" },
+    // })
+    //   .then((res) => {
+    //     setLoading(false);
+    //     if (res.ok) {
+    //       return res.json();
+    //     } else {
+    //       return res.json().then((data) => {
+    //         let errorMessage = "Authentication failed !";
+    //         if (data && data.error && data.error.message) {
+    //           errorMessage = data.error.message;
+    //         }
+    //         throw new Error(errorMessage);
+    //       });
+    //     }
+    //   })
+    //   .then((data) => {
+    //     console.log(data);
+    //   })
+    //   .catch((err) => {
+    //     alert(err.message);
+    //   });
   };
 
   const chengedPrice = (id, newPrice) => {

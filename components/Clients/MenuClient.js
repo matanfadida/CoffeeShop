@@ -14,6 +14,7 @@ const Menu = () => {
               image={item.image}
               price={item.price}
               availability={item.availability}
+              name={item.name}
             />
           ))}
         </ul>

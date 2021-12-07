@@ -2,18 +2,16 @@ import { hashPassword } from "../../../lib/auth";
 import { connectToDataBase } from "../../../lib/db";
 
 async function handler(req, res) {
-  if (res.method !== "POST") {
-    console.log(res.method);
+  if (req.method !== "POST") {
     return;
   }
-  console.log("sisis");
   const data = req.body;
 
   const { email, password } = data;
 
   if (
     !email ||
-    !email.include("@") ||
+    !email.includes("@") ||
     !password ||
     password.trim().length < 7
   ) {

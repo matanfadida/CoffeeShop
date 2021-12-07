@@ -6,8 +6,8 @@ import "../styles/globals.css";
 function MyApp({ Component, pageProps }) {
   return (
     <Fragment>
-      <Header />
       <AuthContextProvider>
+      <Header />
         <Component {...pageProps} />
       </AuthContextProvider>
     </Fragment>

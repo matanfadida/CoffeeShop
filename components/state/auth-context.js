@@ -1,26 +1,33 @@
 import React, { useReducer, useState } from "react";
 
-const ITEMSDUMMY = [
-  {
-    id: "1",
-    name:'Vodka Baloga',
-    description:"Beluga Noble vodka is a distinctive chemical-free vodka with true Siberian provenance. Its lightly sweet flavors of vanilla, oatmeal and honey get spicier on the back palate, leading to a dry and bracing finish. ",
-    image:
-      "https://www.liquor.com/thmb/BRR3y99WnR72Qk7alJINXWGuIjo=/720x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/bottle-review_Beluga_main_720x720-cb8c6266e203440e8826f4008eee018e.jpg",
-    price: "15.90",
-    availability: "yes",
-  },
-  {
-    id: "2",
-    name:"Espresso",
-    description:
-      "Espresso shots topped with hot water create a light layer of crema culminating in this wonderfully rich cup with depth and nuance. Pro Tip: For an additional boost, ask your barista to try this with an extra shot.",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/1200px-A_small_cup_of_coffee.JPG",
-    price: "5.90",
-    availability: "yes",
-  },
-];
+// const ITEMSDUMMY = [
+//   {
+//     id: "1",
+//     name: "Vodka Baloga",
+//     description:
+//       "Beluga Noble vodka is a distinctive chemical-free vodka with true Siberian provenance. Its lightly sweet flavors of vanilla, oatmeal and honey get spicier on the back palate, leading to a dry and bracing finish. ",
+//     image:
+//       "https://www.liquor.com/thmb/BRR3y99WnR72Qk7alJINXWGuIjo=/720x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/bottle-review_Beluga_main_720x720-cb8c6266e203440e8826f4008eee018e.jpg",
+//     price: "15.90",
+//     oldPrice: "",
+//     availability: "no",
+//     table: "inside",
+//     category: "vodka",
+//   },
+//   {
+//     id: "2",
+//     name: "Espresso",
+//     description:
+//       "Espresso shots topped with hot water create a light layer of crema culminating in this wonderfully rich cup with depth and nuance. Pro Tip: For an additional boost, ask your barista to try this with an extra shot.",
+//     image:
+//       "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/1200px-A_small_cup_of_coffee.JPG",
+//     price: "5.90",
+//     oldPrice: "",
+//     availability: "yes",
+//     table: "outside",
+//     category: "coffee",
+//   },
+// ];
 
 const AuthContext = React.createContext({
   items: [],
@@ -37,6 +44,7 @@ const AuthContext = React.createContext({
   token: "",
   login: (token) => {},
   logout: () => {},
+  filterItems: (event) => {},
 });
 
 /////
@@ -47,70 +55,64 @@ const defaultState = {
 };
 
 const cartReducer = (state, action) => {
-  // if (action.type === "ADD") {
-  //   const updateItemss = state.items.concat(action.item);
-  //   const newTotalAmount =
-  //     state.totalAmount + action.item.price * action.item.amount;
-  //   return { items: updateItemss, totalAmount: newTotalAmount };
-  // }
-    if (action.type === "ADD") {
-      const updateTotalAmount =
-        state.totalAmount + action.item.price * action.item.amount;
+  if (action.type === "ADD") {
+    const updateTotalAmount =
+      state.totalAmount + action.item.price * action.item.amount;
 
-      const existingCartItemIndex = state.items.findIndex(
-        (item) => item.id === action.item.id
-      );
-      const existingCartItem = state.items[existingCartItemIndex];
-      let updateItems;
-      if (existingCartItem) {
-        const updateItem = {
-          ...existingCartItem,
-          amount: existingCartItem.amount + action.item.amount,
-        };
-        updateItems = [...state.items];
-        updateItems[existingCartItemIndex] = updateItem;
-      } else {
-        updateItems = state.items.concat(action.item);
-      }
-      return {
-        items: updateItems,
-        totalAmount: updateTotalAmount,
+    const existingCartItemIndex = state.items.findIndex(
+      (item) => item.id === action.item.id
+    );
+    const existingCartItem = state.items[existingCartItemIndex];
+    let updateItems;
+    if (existingCartItem) {
+      const updateItem = {
+        ...existingCartItem,
+        amount: existingCartItem.amount + action.item.amount,
       };
+      updateItems = [...state.items];
+      updateItems[existingCartItemIndex] = updateItem;
+    } else {
+      updateItems = state.items.concat(action.item);
     }
-    if (action.type === "REMOVE") {
-      const existingCartItemIndex = state.items.findIndex(
-        (item) => item.id === action.id
-      );
-      const existingCartItem = state.items[existingCartItemIndex];
+    return {
+      items: updateItems,
+      totalAmount: updateTotalAmount,
+    };
+  }
+  if (action.type === "REMOVE") {
+    const existingCartItemIndex = state.items.findIndex(
+      (item) => item.id === action.id
+    );
+    const existingCartItem = state.items[existingCartItemIndex];
 
-      const updateTotalAmount = state.totalAmount - existingCartItem.price;
-      let updateItems;
+    const updateTotalAmount = state.totalAmount - existingCartItem.price;
+    let updateItems;
 
-      if (existingCartItem.amount === 1) {
-        updateItems = state.items.filter((item) => item.id !== action.id);
-      } else {
-        const updateItem = {
-          ...existingCartItem,
-          amount: existingCartItem.amount - 1,
-        };
-        updateItems = [...state.items];
-        updateItems[existingCartItemIndex] = updateItem;
-      }
-      return {
-        items: updateItems,
-        totalAmount: updateTotalAmount,
+    if (existingCartItem.amount === 1) {
+      updateItems = state.items.filter((item) => item.id !== action.id);
+    } else {
+      const updateItem = {
+        ...existingCartItem,
+        amount: existingCartItem.amount - 1,
       };
+      updateItems = [...state.items];
+      updateItems[existingCartItemIndex] = updateItem;
     }
-    if (action.type === "CLEAN") {
-      return defaultState;
-    }
+    return {
+      items: updateItems,
+      totalAmount: updateTotalAmount,
+    };
+  }
+  if (action.type === "CLEAN") {
+    return defaultState;
+  }
   return defaultState;
 };
 
 /////
 
 export const AuthContextProvider = (props) => {
-  const [items, setItems] = useState(ITEMSDUMMY);
+  const [items, setItems] = useState([]);
   const [Loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
   const [cartStateReduce, dispatchCartState] = useReducer(
@@ -206,10 +208,14 @@ export const AuthContextProvider = (props) => {
 
   const chengedPrice = (id, newPrice) => {
     for (const index in items) {
-      if (items[index].id == id) items[index].price = newPrice;
+      if (items[index].id == id) {
+        items[index].oldPrice = items[index].price;
+        items[index].price = newPrice;
+      }
     }
     console.log(items);
   };
+
 
   const contextValue = {
     items: items,

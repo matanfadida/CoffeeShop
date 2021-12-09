@@ -1,14 +1,11 @@
-import { useContext } from "react";
 import Link from "next/link";
 import ShowItems from "../Menu/ShowItems";
-import AuthContext from "../state/auth-context";
 
-const MenuAdmin = () => {
-  const ctx = useContext(AuthContext);
+const MenuAdmin = (props) => {
 
   return (
     <ul>
-      {ctx.items.map((item) => (
+      {props.items.map((item) => (
         <ShowItems
           key={item.id}
           id={item.id}
@@ -16,6 +13,8 @@ const MenuAdmin = () => {
           image={item.image}
           price={item.price}
           availability={item.availability}
+          name={item.name}
+          oldPrice={item.oldPrice}
         />
       ))}
       <Link href="/additems">add</Link>

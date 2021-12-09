@@ -17,6 +17,10 @@ const Cart = (props) => {
     router.push("/Menu");
   };
 
+  const OrderHandler = () => {
+    router.push("/Baristas");
+  }
+
   const cartItems = (
     <ul>
       {ctx.dynamicItems.map((item) => (
@@ -40,7 +44,11 @@ const Cart = (props) => {
       </div>
       <div>
         <button onClick={BackBuyHandler}>Close</button>
-        <button>Order</button>
+        <button onClick={OrderHandler}>Order</button>
+        <span>choose a table and Chair</span>
+        <input type="number"/>
+        <input type="number"/>
+
       </div>
     </Card>
   );

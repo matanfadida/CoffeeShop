@@ -11,6 +11,15 @@ const ShowItems = (props) => {
   const ctx = useContext(AuthContext);
   const AdminLogin = router.pathname === "/adminlogin/Menu";
 
+  const availability = props.availability === 'yes';
+  const oldPrice = false;
+
+  if (props.oldPrice !== ''){
+    const oldPriceNumber = +props.oldPrice;
+    const newPriceNumber = +props.price;
+    oldPrice = oldPriceNumber > newPriceNumber;
+  }
+
   const removeItems = () => {
     ctx.removeItem(props.id);
   };
@@ -32,7 +41,7 @@ const ShowItems = (props) => {
         <label>Description</label>
         <li>{props.description}</li>
         <label>Price</label>
-        <li>{props.price}</li>
+        <li>{oldPrice ? <p>{'old Price: ' + props.oldPrice + ' ' + 'new Price: ' + props.price}</p> : props.price}</li>
         <label>Availability</label>
         <li>{props.availability}</li>
       </ul>
@@ -43,7 +52,7 @@ const ShowItems = (props) => {
           <button onClick={removeItems}>Remove</button>
         </div>
       )}
-      <ItemsFrom id={props.id} onAddToCart={addToCartHandler} />
+      {availability && <ItemsFrom id={props.id} onAddToCart={addToCartHandler} />}
       {/* <button onClick={}>Add to Cart</button> */}
     </div>
   );

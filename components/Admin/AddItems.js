@@ -1,10 +1,8 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useRouter } from 'next/router';
-import AuthContext from "../state/auth-context";
+
 
 const AddItems = () => {
-    const id = 1;
-  const ctx = useContext(AuthContext);
   const router = useRouter();
   const [enteredDescription, setEnteredDescription] = useState("");
   const [enteredImage, setEnteredImage] = useState("");
@@ -16,9 +14,7 @@ const AddItems = () => {
 
   const addItemSubmitHandler = async(event) => {
     event.preventDefault();
-    id += 1;
     const item = {
-      id: id,
       name: enteredName,
       description: enteredDescription,
       image: enteredImage,
@@ -29,15 +25,12 @@ const AddItems = () => {
       category:enteredCategory,
     };
     
-    // ctx.addItems(item);
     const response = await fetch('/api/items/data', {
       method: 'POST',
       body: JSON.stringify(item),
       headers: {'Content-Type':'application/json'}
     });
     const data = await response.json();
-    // console.log(data);
-
 
     router.push('/adminlogin/Menu');
   };

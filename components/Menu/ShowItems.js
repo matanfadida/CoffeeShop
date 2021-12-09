@@ -11,26 +11,47 @@ const ShowItems = (props) => {
   const ctx = useContext(AuthContext);
   const AdminLogin = router.pathname === "/adminlogin/Menu";
 
-  const availability = props.availability === 'yes';
-  const oldPrice = false;
+  const availability = props.availability === "yes";
+  let oldPrice = false;
 
-  if (props.oldPrice !== ''){
+  if (props.oldPrice !== "") {
     const oldPriceNumber = +props.oldPrice;
     const newPriceNumber = +props.price;
     oldPrice = oldPriceNumber > newPriceNumber;
   }
 
-  const removeItems = () => {
-    ctx.removeItem(props.id);
-  };
-  const chengedPriceHandler = () => {
-    const enteredNewPrice = newPriceInputRef.current.value;
-    ctx.chengedPrice(props.id, enteredNewPrice);
+  const removeItems = async () => {
+    const response = await fetch("/api/items/data", {
+      method: "DELETE",
+      body: JSON.stringify({ id: props.id }),
+      headers: { "Content-Type": "application/json" },
+    });
     router.push("/adminlogin/Menu");
+  };
+  const chengedPriceHandler = async() => {
+    const enteredNewPrice = newPriceInputRef.current.value;
+    const response = await fetch("/api/items/data", {
+      method: "PUT",
+      body: JSON.stringify({
+        id: props.id,
+        newPrice: enteredNewPrice,
+        price: props.price,
+      }),
+      headers: { "Content-Type": "application/json" },
+    });
+    router.push("/adminlogin/Menu");
+
+    // ctx.chengedPrice(props.id, enteredNewPrice, props.price);
+    // router.push("/adminlogin/Menu");
   };
 
   const addToCartHandler = (amount) => {
-    ctx.addItemToCartHandler({ id: props.id, price: props.price, amount: amount, name:props.name });
+    ctx.addItemToCartHandler({
+      id: props.id,
+      price: props.price,
+      amount: amount,
+      name: props.name,
+    });
   };
 
   return (
@@ -41,7 +62,19 @@ const ShowItems = (props) => {
         <label>Description</label>
         <li>{props.description}</li>
         <label>Price</label>
-        <li>{oldPrice ? <p>{'old Price: ' + props.oldPrice + ' ' + 'new Price: ' + props.price}</p> : props.price}</li>
+        <li>
+          {oldPrice ? (
+            <p>
+              {"old Price: " +
+                props.oldPrice +
+                " " +
+                "new Price: " +
+                props.price}
+            </p>
+          ) : (
+            props.price
+          )}
+        </li>
         <label>Availability</label>
         <li>{props.availability}</li>
       </ul>
@@ -52,7 +85,9 @@ const ShowItems = (props) => {
           <button onClick={removeItems}>Remove</button>
         </div>
       )}
-      {availability && <ItemsFrom id={props.id} onAddToCart={addToCartHandler} />}
+      {availability && (
+        <ItemsFrom id={props.id} onAddToCart={addToCartHandler} />
+      )}
       {/* <button onClick={}>Add to Cart</button> */}
     </div>
   );

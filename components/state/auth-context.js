@@ -1,41 +1,9 @@
 import React, { useReducer, useState } from "react";
 
-// const ITEMSDUMMY = [
-//   {
-//     id: "1",
-//     name: "Vodka Baloga",
-//     description:
-//       "Beluga Noble vodka is a distinctive chemical-free vodka with true Siberian provenance. Its lightly sweet flavors of vanilla, oatmeal and honey get spicier on the back palate, leading to a dry and bracing finish. ",
-//     image:
-//       "https://www.liquor.com/thmb/BRR3y99WnR72Qk7alJINXWGuIjo=/720x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/bottle-review_Beluga_main_720x720-cb8c6266e203440e8826f4008eee018e.jpg",
-//     price: "15.90",
-//     oldPrice: "",
-//     availability: "no",
-//     table: "inside",
-//     category: "vodka",
-//   },
-//   {
-//     id: "2",
-//     name: "Espresso",
-//     description:
-//       "Espresso shots topped with hot water create a light layer of crema culminating in this wonderfully rich cup with depth and nuance. Pro Tip: For an additional boost, ask your barista to try this with an extra shot.",
-//     image:
-//       "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/1200px-A_small_cup_of_coffee.JPG",
-//     price: "5.90",
-//     oldPrice: "",
-//     availability: "yes",
-//     table: "outside",
-//     category: "coffee",
-//   },
-// ];
-
 const AuthContext = React.createContext({
   items: [],
-  addItems: (item) => {},
-  removeItem: (id) => {},
   addItemToCartHandler: (item) => {},
   removeItemFromCartHandler: (id) => {},
-  chengedPrice: (id, newPrice) => {},
   fatchAute: (url) => {},
   Loading: false,
   dynamicItems: [],
@@ -130,19 +98,6 @@ export const AuthContextProvider = (props) => {
     setToken(null);
   };
 
-  const addItemsHandler = (item) => {
-    const updateItems = [...items];
-    updateItems.push(item);
-    setItems(updateItems);
-  };
-
-  const removeItemHandler = (id) => {
-    setItems((prevItems) => {
-      const newItems = prevItems.filter((item) => item.id !== id);
-      return newItems;
-    });
-  };
-
   const addItemToCartHandler = (item) => {
     dispatchCartState({ type: "ADD", item: item });
   };
@@ -206,25 +161,13 @@ export const AuthContextProvider = (props) => {
     //   });
   };
 
-  const chengedPrice = (id, newPrice) => {
-    for (const index in items) {
-      if (items[index].id == id) {
-        items[index].oldPrice = items[index].price;
-        items[index].price = newPrice;
-      }
-    }
-    console.log(items);
-  };
 
 
   const contextValue = {
     items: items,
-    addItems: addItemsHandler,
-    removeItem: removeItemHandler,
     addItemToCartHandler,
     removeItemFromCartHandler,
     cleanItemHandler,
-    chengedPrice,
     fatchAute,
     dynamicItems: cartStateReduce.items,
     totalAmount: cartStateReduce.totalAmount,

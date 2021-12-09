@@ -1,6 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 
-async function handlerItem(req, res) {
+async function handlerOrder(req, res) {
   const data = req.body;
   console.log(data.id);
 
@@ -27,7 +27,7 @@ async function handlerItem(req, res) {
     );
   }
 
-  res.status(201).json({ message: "Create item !" });
+  res.status(201).json({ message: "Order successfully !" });
 }
 
-export default handlerItem;
+export default handlerOrder;

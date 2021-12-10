@@ -1,19 +1,19 @@
-import { useContext } from "react";
-import AuthContext from "../state/auth-context";
 import CartItem from "../Cart/CartItem";
 
 
-const Barista = () => {
-    const ctx = useContext(AuthContext);
+const Barista = (props) => {
+
+  // console.log(props.ordersData.map(as=>as.name))
+  
+
     return <div>{<ul>
-        {ctx.dynamicItems.map((item) => (
+        {props.ordersData.map((item) => (
           <CartItem
             key={item.id}
             name={item.name}
             amount={item.amount}
             price={item.price}
-            // onRemove={cartIteamRemoveHandler.bind(null,item.id)}
-            // onAdd={cartIteamAddHandler.bind(null, item)}
+            total={item.totalAmount}
           />
         ))}
       </ul>}</div>

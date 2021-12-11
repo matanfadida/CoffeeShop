@@ -1,22 +1,23 @@
-import CartItem from "../Cart/CartItem";
-
+import { Fragment } from "react";
+import ShowOrder from "./show-order";
 
 const Barista = (props) => {
-
-  // console.log(props.ordersData.map(as=>as.name))
-  
-
-    return <div>{<ul>
-        {props.ordersData.map((item) => (
-          <CartItem
-            key={item.id}
-            name={item.name}
-            amount={item.amount}
-            price={item.price}
-            total={item.totalAmount}
-          />
-        ))}
-      </ul>}</div>
-}
+  console.log(props._id);
+  return (
+    <div>
+      {
+        <ul>
+          {props.ordersData.map((data,index) => (
+            <Fragment>
+              <ShowOrder key={props._id[index]} ordersData={data.data} />
+              {props.totalAmount[index].totalAmount}
+              {/* {props._id[index].totalAmount} */}
+            </Fragment>
+          ))}
+        </ul>
+      }
+    </div>
+  );
+};
 
 export default Barista;

@@ -17,7 +17,7 @@ export async function getStaticProps() {
     const result = db.collection("orders");
   
     const ordersData = await result.find().toArray();
-    console.log(ordersData.filter(data => data._id.toString() === "61b27e82eb61e643cac29fe2"));
+    // console.log(ordersData.filter(data => data._id.toString() === "61b27e82eb61e643cac29fe2"));
         return{props:{a:'a'}}
     // client.close();
     // return { props: {ordersData: ordersData.data[0].map(item => ({

@@ -34,10 +34,9 @@ const Cart = () => {
 
   const OrderHandler = async () => {
     setSendReq(true);
-    const {name, price, amount} = ctx.dynamicItems;
     const response = await fetch("/api/items/order-data", {
       method: "POST",
-      body: JSON.stringify({ totalAmount: totalAmount, name: name, price: price, amount: amount }),
+      body: JSON.stringify({ totalAmount: totalAmount,data: ctx.dynamicItems }),
       headers: { "Content-Type": "application/json" },
     });
     setSendReq(false);

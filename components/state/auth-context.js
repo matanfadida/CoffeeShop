@@ -8,6 +8,7 @@ const AuthContext = React.createContext({
   Loading: false,
   dynamicItems: [],
   totalAmount: 0,
+  error: '',
   isLoggedIn: false,
   token: "",
   login: (token) => {},
@@ -88,6 +89,8 @@ export const AuthContextProvider = (props) => {
     defaultState
   );
 
+  let error_;
+
   const userIsLoggedIn = !!token;
 
   const isLoginHandler = (token) => {
@@ -110,58 +113,32 @@ export const AuthContextProvider = (props) => {
     dispatchCartState({ type: "CLEAN" });
   };
 
-  const fatchAute = async (url, enteredEmail, enteredPassword) => {
+  const fatchAute = async (url, enteredEmail, enteredPassword, enteredAge) => {
     setLoading(true);
     const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify({
         email: enteredEmail,
         password: enteredPassword,
+        age: enteredAge,
       }),
       headers: { "Content-Type": "application/json" },
     });
 
-    const data = response.json();
+    const data = await response.json();
     setLoading(false);
 
-    if (!response.ok) {
-      throw new Error(data.message || "Error");
+    try {
+      if (!response.ok) {
+        console.log(data.message);
+        throw new Error(data.message || "Error");
+      }
+    } catch (error) {
+      console.log(error);
     }
     console.log(data);
     return data;
-
-    // fetch(url, {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     email: enteredEmail,
-    //     password: enteredPassword,
-    //     returnSecureToken: true,
-    //   }),
-    //   headers: { "Content-Type": "application/json" },
-    // })
-    //   .then((res) => {
-    //     setLoading(false);
-    //     if (res.ok) {
-    //       return res.json();
-    //     } else {
-    //       return res.json().then((data) => {
-    //         let errorMessage = "Authentication failed !";
-    //         if (data && data.error && data.error.message) {
-    //           errorMessage = data.error.message;
-    //         }
-    //         throw new Error(errorMessage);
-    //       });
-    //     }
-    //   })
-    //   .then((data) => {
-    //     console.log(data);
-    //   })
-    //   .catch((err) => {
-    //     alert(err.message);
-    //   });
   };
-
-
 
   const contextValue = {
     items: items,
@@ -173,6 +150,7 @@ export const AuthContextProvider = (props) => {
     totalAmount: cartStateReduce.totalAmount,
     Loading,
     isLoggedIn: userIsLoggedIn,
+    error:error_,
     token: token,
     login: isLoginHandler,
     logout: isLogoutHanlder,

@@ -11,7 +11,6 @@ const Cart = () => {
   const router = useRouter();
   const [sendReq, setSendReq] = useState(false);
   const [ordered, setOrdered] = useState(false);
-  const [guest, setGuest] = useState(0);
 
   const totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
 

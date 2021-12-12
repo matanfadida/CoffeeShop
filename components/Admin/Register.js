@@ -10,19 +10,17 @@ const Register = () => {
   const ctx = useContext(AuthContext);
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
+  const [enteredAge, setEnteredAge] = useState("");
 
   const onSubmitHandlerRegister = async (event) => {
     event.preventDefault();
-    try {
-      const result = ctx.fatchAute(
-        "/api/auth/signup",
-        enteredEmail,
-        enteredPassword
-      );
-      console.log(result);
-    } catch (error) {
-      console.log(error);
-    }
+
+    const result = ctx.fatchAute(
+      "/api/auth/signup",
+      enteredEmail,
+      enteredPassword,
+      enteredAge
+    );
   };
 
   const enteredEmailHandler = (event) => {
@@ -32,6 +30,12 @@ const Register = () => {
   const enteredPasswordHandler = (event) => {
     setEnteredPassword(event.target.value);
   };
+
+  const enteredAgeHandler = (event) => {
+    setEnteredAge(event.target.value);
+  };
+
+
   return (
     <Card ClassName={style.form}>
       <form onSubmit={onSubmitHandlerRegister}>
@@ -49,10 +53,10 @@ const Register = () => {
               onChange={enteredPasswordHandler}
             />
           </div>
-          {/* <div className={style.control}>
+          <div className={style.control}>
             <label>Age</label>
-            <input type="number" id="age" onChange={enteredEmailHandler} />
-          </div> */}
+            <input type="number" id="age" onChange={enteredAgeHandler} />
+          </div>
           <div className={style.actions}>
             {ctx.Loading ? (
               <FontAwesomeIcon icon={faSpinner} size="2x" spin={true} />

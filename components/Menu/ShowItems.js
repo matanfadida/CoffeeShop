@@ -10,11 +10,26 @@ const ShowItems = (props) => {
   const router = useRouter();
   const ctx = useContext(AuthContext);
   const AdminLogin = router.pathname === "/adminlogin/Menu";
+  const current = new Date();
+  const date = `${current.getDate()}/${
+    current.getMonth() + 1
+  }/${current.getFullYear()}`;
 
-  const availability = props.availability === "yes";
+  let availability = props.availability === "yes";
+  let partyState = props.PartyTime && props.party === 'party';
+  console.log(props.party);
+  if (partyState){
+    availability = true;
+  }
   let oldPrice = false;
 
-  if (props.oldPrice !== "") {
+  if (
+    props.oldPrice !== "" &&
+    current.getHours() < 16 &&
+    current.getHours() >= 14 &&
+    current.getMinutes() > 0 &&
+    current.getMinutes() < 59
+  ) {
     const oldPriceNumber = +props.oldPrice;
     const newPriceNumber = +props.price;
     oldPrice = oldPriceNumber > newPriceNumber;
@@ -28,7 +43,7 @@ const ShowItems = (props) => {
     });
     router.push("/adminlogin/Menu");
   };
-  const chengedPriceHandler = async() => {
+  const chengedPriceHandler = async () => {
     const enteredNewPrice = newPriceInputRef.current.value;
     const response = await fetch("/api/items/data", {
       method: "PUT",
@@ -40,9 +55,6 @@ const ShowItems = (props) => {
       headers: { "Content-Type": "application/json" },
     });
     router.push("/adminlogin/Menu");
-
-    // ctx.chengedPrice(props.id, enteredNewPrice, props.price);
-    // router.push("/adminlogin/Menu");
   };
 
   const addToCartHandler = (amount) => {
@@ -76,7 +88,7 @@ const ShowItems = (props) => {
           )}
         </li>
         <label>Availability</label>
-        <li>{props.availability}</li>
+        {partyState ? <li>yes</li> :<li>{props.availability}</li>}
       </ul>
       {AdminLogin && (
         <div>

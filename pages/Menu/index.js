@@ -30,6 +30,7 @@ export async function getStaticProps() {
       availability: item.availability,
       table: item.table,
       category: item.category,
+      party: item.party,
       id: item._id.toString(),
 
   }))} };

@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import Card from "../UI/Card";
 import ShowOrder from "./show-order";
 
 const Barista = (props) => {
@@ -8,11 +9,13 @@ const Barista = (props) => {
       {
         <ul>
           {props.ordersData.map((data,index) => (
-            <Fragment>
+            <Card>
               <ShowOrder key={props._id[index]} ordersData={data.data} />
+              <label>total Amount: </label>
               {props.totalAmount[index].totalAmount}
-              {/* {props._id[index].totalAmount} */}
-            </Fragment>
+              <br/>
+              <button>confirm the order</button>
+            </Card>
           ))}
         </ul>
       }

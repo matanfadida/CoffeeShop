@@ -3,13 +3,18 @@ import ShowItems from "../Menu/ShowItems";
 
 const Menu = (props) => {
   const [itemsFilter, setItemsFilter] = useState(props.items);
-  const [party, setParty] = useState('')
+  const [party, setParty] = useState("");
+  const [Thursday, setThursday] = useState(false);
   const current = new Date();
+  const tody = `${current.getFullYear()}-${
+    current.getMonth() + 1
+  }-${current.getDate()}`;
+
   let ShowLunch =
-  current.getHours() <= 16 &&
-  current.getHours() >= 14 &&
-  current.getMinutes() >= 0 &&
-  current.getMinutes() <= 59;
+    current.getHours() <= 16 &&
+    current.getHours() >= 14 &&
+    current.getMinutes() >= 0 &&
+    current.getMinutes() <= 59;
   let PartyTime = ShowLunch && current.getDay() === 0;
 
   const filterItems = (event, filterKey) => {
@@ -27,6 +32,25 @@ const Menu = (props) => {
     }
     if (filterKey === "party") {
       const filterItem = props.items.filter((item) => item.party === "yes");
+      return filterItem;
+    }
+    if (filterKey === "price") {
+      const filterItem = [...props.items].sort(
+        (item_1, item_2) => item_2.price - item_1.price
+      );
+      filterItem = filterItem.filter((item) => item);
+      return filterItem;
+    }
+    if (filterKey === "thursday") {
+      const filterItem = props.items.filter((item) => item.thursday === "yes")
+      return filterItem;
+    }
+    if (filterKey === "price increase") {
+      const filterItem = props.items.filter((item) => item.price > item.oldPrice)
+      return filterItem;
+    }
+    if (filterKey === "price decrease") {
+      const filterItem = props.items.filter((item) => item.price < item.oldPrice)
       return filterItem;
     }
   };
@@ -55,6 +79,15 @@ const Menu = (props) => {
     }
   };
 
+  const sortPriceHandler = (event) => {
+    console.log(props.items);
+    if (event.target.value === "all") {
+      setItemsFilter(props.items);
+    } else {
+      setItemsFilter(filterItems(event.target.value, "price"));
+    }
+  };
+
   const selectPartyHandler = (event) => {
     if (event.target.value === "all") {
       setItemsFilter(props.items);
@@ -63,7 +96,31 @@ const Menu = (props) => {
       setItemsFilter(filterItems(event.target.value, "party"));
     }
   };
-  
+
+  const dateSelectHandler = (event) => {
+    const selectDate = new Date(event.target.value).getDay();
+    if (selectDate === 4) {
+      setThursday(true);
+      setItemsFilter(filterItems(selectDate, "thursday"))
+    }
+    else{
+      setThursday(false);
+      setItemsFilter(props.items);
+    }
+  };
+
+  const showAsHandler = (event) => {
+    if (event.target.value === "all") {
+      setItemsFilter(props.items);
+    }
+    else if (event.target.value === "price increase"){
+      setItemsFilter(filterItems(event.target.value, "price increase"));
+    }
+    else if (event.target.value === "price decrease"){
+      setItemsFilter(filterItems(event.target.value, "price decrease"));
+    }
+  };
+
   return (
     <Fragment>
       <label>Where Sit?</label>
@@ -76,12 +133,33 @@ const Menu = (props) => {
       <label>Category</label>
       <select name="category" id="category" onChange={selectCatgoryHandler}>
         <option value="all">All</option>
-        {props.items.map((item) => (
-          <option key={item.id} value={item.category}>
-            {item.category}
-          </option>
-        ))}
+        <option value="alcohol">alcohol</option>
+        <option value="coffee">coffee</option>
       </select>
+
+      <label>Price Range</label>
+      <select name="price" id="price" onChange={sortPriceHandler}>
+        <option value="all">All</option>
+        <option value="price">price</option>
+      </select>
+
+      <label>Show As</label>
+      <select name="show-as" id="show-as" onChange={showAsHandler}>
+        <option value="all">All</option>
+        <option value="price increase">price increase</option>
+        <option value="price decrease">price decrease</option>
+        <option value="most popular">most popular</option>
+        <option value="the day">a drink/dish of the day</option>
+      </select>
+
+      <label>Date:</label>
+      <input
+        type="date"
+        id="date"
+        name="date"
+        defaultValue={tody}
+        onChange={dateSelectHandler}
+      />
 
       {ShowLunch && (
         <Fragment>
@@ -93,11 +171,15 @@ const Menu = (props) => {
         </Fragment>
       )}
 
-      {PartyTime && <Fragment><label>Party</label>
-      <select name="party" id="party" onChange={selectPartyHandler}>
-        <option value="all">All</option>
-        <option value="party">party</option>
-      </select></Fragment>}
+      {PartyTime && (
+        <Fragment>
+          <label>Party</label>
+          <select name="party" id="party" onChange={selectPartyHandler}>
+            <option value="all">All</option>
+            <option value="party">party</option>
+          </select>
+        </Fragment>
+      )}
 
       <ul>
         {itemsFilter.map((item) => (
@@ -112,6 +194,7 @@ const Menu = (props) => {
             oldPrice={item.oldPrice}
             PartyTime
             party={party}
+            Thursday={Thursday}
           />
         ))}
       </ul>

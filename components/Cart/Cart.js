@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import AuthContext from "../state/auth-context";
 import Card from "../UI/Card";
 import CartItem from "./CartItem";
@@ -21,15 +21,6 @@ const Cart = () => {
     router.push("/Menu");
   };
 
-  // useEffect(()=>{
-  //   const initialStroage = localStorage.getItem('guest');
-
-    
-
-  //   if(initialStroage){
-
-  //   }
-  // },[])
 
   const OrderHandler = async () => {
     setSendReq(true);
@@ -85,8 +76,11 @@ const Cart = () => {
         ) : (
           <button onClick={OrderHandler}>Order</button>
         )}
-        <span>choose a table and Chair</span>
+        <br/>
+        <span>choose a table</span>
         <input type="number" />
+        <br/>
+        <span>choose a Chair</span>
         <input type="number" />
       </div>
     </Card>

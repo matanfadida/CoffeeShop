@@ -11,6 +11,8 @@ const AddItems = () => {
   const [enteredName, setEnteredName] = useState("");
   const [enteredTable, setEnteredTable] = useState("");
   const [enteredCategory, setEnteredCategory] = useState("");
+  const [enteredParty, setEnteredParty] = useState("");
+  const [enteredThursday, setEnteredThrusday] = useState("");
 
   const addItemSubmitHandler = async(event) => {
     event.preventDefault();
@@ -23,6 +25,8 @@ const AddItems = () => {
       availability: enteredAvailability,
       table:enteredTable,
       category:enteredCategory,
+      party:enteredParty,
+      thursdat:enteredThursday,
     };
     
     const response = await fetch('/api/items/data', {
@@ -55,6 +59,12 @@ const AddItems = () => {
   const categortEnteredHandler = (event) => {
     setEnteredCategory(event.target.value);
   };
+  const partyEnteredHandler = (event) => {
+    setEnteredParty(event.target.value);
+  };
+  const thursdayEnteredHandler = (event) => {
+    setEnteredThrusday(event.target.value);
+  };
 
   return (
     <form onSubmit={addItemSubmitHandler}>
@@ -79,6 +89,12 @@ const AddItems = () => {
         <br/>
         <label>category:</label>
         <input type="text" onChange={categortEnteredHandler} />
+        <br/>
+        <label>party:</label>
+        <input type="text" onChange={partyEnteredHandler} />
+        <br/>
+        <label>thursday:</label>
+        <input type="text" onChange={thursdayEnteredHandler} />
         <br/>
       </div>
       <button type="submit">Add</button>

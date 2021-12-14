@@ -17,11 +17,19 @@ const ShowItems = (props) => {
 
   let availability = props.availability === "yes";
   let partyState = props.PartyTime && props.party === 'party';
-  console.log(props.party);
+  let ThursdayState = props.Thursday;
+  let stateAvailability = <li>{props.availability}</li>;
+
   if (partyState){
     availability = true;
+    stateAvailability = <li>yes</li>
   }
   let oldPrice = false;
+
+  if(ThursdayState){
+    availability = true;
+    stateAvailability = <li>yes</li>
+  }
 
   if (
     props.oldPrice !== "" &&
@@ -88,7 +96,7 @@ const ShowItems = (props) => {
           )}
         </li>
         <label>Availability</label>
-        {partyState ? <li>yes</li> :<li>{props.availability}</li>}
+        {stateAvailability}
       </ul>
       {AdminLogin && (
         <div>

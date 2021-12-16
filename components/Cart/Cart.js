@@ -16,7 +16,11 @@ const Cart = (props) => {
   const [enteredTable, setEnteredTable] = useState(0);
   const [enteredChair, setEnteredChair] = useState(0);
   const table = props.tablesData;
-  console.log(table[0]);
+  const current = new Date();
+  let outsideAvailability = false;
+  if(current.getDay() !== 1){
+    outsideAvailability = true;
+  }
 
   const totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
 
@@ -38,10 +42,28 @@ const Cart = (props) => {
     setSit(event.target.value);
   };
 
+  let ShowTable;
   
+  if(sit === "inside"){
+    ShowTable = (
+      <p>
+        {table[0].inside.map((chair, index) => (
+          <Table key={index} id={index} chair={chair} />
+        ))}
+      </p>
+    )}
+  else if(sit === "outside"){
+    ShowTable = (
+      <p>
+        {table[0].outside.map((chair, index) => (
+          <Table key={index} id={index} chair={chair} />
+        ))}
+      </p>
+    )
+  }
 
   const OrderHandler = async () => {
-    if (sit === "inside" && table[0].inside[enteredTable][enteredChair - 1] === 0) {
+    if ((sit === "inside" && table[0].inside[enteredTable-1][enteredChair - 1] === 0) || (sit === "outside" && table[0].inside[enteredTable-1][enteredChair - 1] === 0)) {
       console.log("the chair occupied try other");
       return;
     }
@@ -56,7 +78,7 @@ const Cart = (props) => {
       method: "PUT",
       body: JSON.stringify({
         id:props.idTable,
-        table:table,
+        table:{inside: table[0].inside, outside: table[0].outside},
       }),
       headers: { "Content-Type": "application/json" },
     });
@@ -120,17 +142,12 @@ const Cart = (props) => {
         <select name="sit" id="sit" onChange={selectSitHandler}>
           <option value="all">All</option>
           <option value="inside">inside</option>
-          <option value="outside">outside</option>
+          {outsideAvailability && <option value="outside">outside</option>}
         </select>
+          {!outsideAvailability && <><br/><label>Sitting outside not available</label></>}
         <br />
         <label>open to sit</label>
-        {sit === "inside" && (
-          <p>
-            {table[0][0].inside.map((chair, index) => (
-              <Table key={index} id={index} chair={chair} />
-            ))}
-          </p>
-        )}
+        {ShowTable}
 
         <br />
         <span>choose a table</span>

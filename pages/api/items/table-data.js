@@ -17,11 +17,11 @@ async function handlerTable(req, res) {
     const result = await db.collection('tables').deleteOne({ _id: ObjectId(data.id) });
   }
   if(req.method === "PUT"){
-    console.log(data);
+    console.log(data.table.inside);
     const result = await db.collection('tables').updateOne(
       { _id:ObjectId(data.id)},
       {
-        $set: { table: data.table },
+        $set: { table: {inside: data.table.inside, outside: data.table.outside} },
         $currentDate: { lastModified: true }
       }
     );

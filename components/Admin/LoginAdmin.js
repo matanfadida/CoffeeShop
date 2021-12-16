@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import AuthContext from "../state/auth-context";
 import Card from "../UI/Card";
+import { signIn } from "next-auth/react";
 
 import style from "./LoginAdmin.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,13 +12,17 @@ const LoginAdmin = () => {
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
 
-  const onSubmitHandlerLogin = (event) => {
+  const onSubmitHandlerLogin = async(event) => {
     event.preventDefault();
-    ctx.fatchAute(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAvxSQfTowm4dkpC0jqSnzCEtzSOEy2ukU",
-      enteredEmail,
-      enteredPassword
-    );
+    const result = await signIn("credentials", {
+      redirect: false,
+      email: enteredEmail,
+      password: enteredPassword,
+    });
+    if(!result.error){
+      //asd
+    }
+    console.log(result);
   };
 
   const enteredEmailHandler = (event) => {
@@ -47,7 +52,7 @@ const LoginAdmin = () => {
 
           <div className={style.actions}>
             {ctx.Loading ? (
-              <FontAwesomeIcon icon={faSpinner} size='2x' spin={true} />
+              <FontAwesomeIcon icon={faSpinner} size="2x" spin={true} />
             ) : (
               <button type="submit">Login</button>
             )}

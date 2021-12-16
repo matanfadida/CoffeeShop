@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import ShowItems from "../Menu/ShowItems";
 
 const Menu = (props) => {
@@ -58,6 +58,17 @@ const Menu = (props) => {
       return filterItem;
     }
   };
+
+  useEffect(() => {
+    if (current.getDay() === 4) {
+      setThursday(true);
+      setItemsFilter(filterItems(current.getDay(), "thursday"))
+    }
+    else{
+      setThursday(false);
+      setItemsFilter(props.items);
+    }
+  },[])
 
   const selectSitHandler = (event) => {
     if (event.target.value === "all") {

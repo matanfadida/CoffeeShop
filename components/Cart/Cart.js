@@ -16,7 +16,7 @@ const Cart = (props) => {
   const [enteredTable, setEnteredTable] = useState(0);
   const [enteredChair, setEnteredChair] = useState(0);
   const table = props.tablesData;
-  console.log(table[0][0]);
+  console.log(table[0]);
 
   const totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
 
@@ -41,16 +41,16 @@ const Cart = (props) => {
   
 
   const OrderHandler = async () => {
-    if (sit === "inside" && table[0][0].inside[enteredTable][enteredChair - 1] === 0) {
+    if (sit === "inside" && table[0].inside[enteredTable][enteredChair - 1] === 0) {
       console.log("the chair occupied try other");
       return;
     }
     setSendReq(true);
       if(sit === "inside"){
-        table[0][0].inside[enteredTable-1][enteredChair-1] = 0;
+        table[0].inside[enteredTable-1][enteredChair-1] = 0;
       }
       else{
-        table[0][0].outside[enteredTable-1][enteredChair-1] = 0;
+        table[0].outside[enteredTable-1][enteredChair-1] = 0;
       }
       await fetch("/api/items/table-data", {
       method: "PUT",

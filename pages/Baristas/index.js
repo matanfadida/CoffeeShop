@@ -16,7 +16,6 @@ export async function getStaticProps() {
 
   const ordersData = await result.find().toArray();
 
-//   console.log(ordersData.totalAmount);
   client.close();
 
   return {

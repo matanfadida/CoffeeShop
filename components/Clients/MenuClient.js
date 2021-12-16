@@ -11,7 +11,7 @@ const Menu = (props) => {
   }-${current.getDate()}`;
 
   let ShowLunch =
-    current.getHours() <= 16 &&
+    current.getHours() <= 17 &&
     current.getHours() >= 14 &&
     current.getMinutes() >= 0 &&
     current.getMinutes() <= 59;
@@ -51,6 +51,10 @@ const Menu = (props) => {
     }
     if (filterKey === "price decrease") {
       const filterItem = props.items.filter((item) => item.price < item.oldPrice)
+      return filterItem;
+    }
+    if (filterKey === "the day") {
+      const filterItem = [props.items[current.getDay()]];
       return filterItem;
     }
   };
@@ -118,6 +122,9 @@ const Menu = (props) => {
     }
     else if (event.target.value === "price decrease"){
       setItemsFilter(filterItems(event.target.value, "price decrease"));
+    }
+    else if (event.target.value === "the day"){
+      setItemsFilter(filterItems(event.target.value, "the day"));
     }
   };
 

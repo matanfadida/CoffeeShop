@@ -1,6 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 
-async function handlerOrder(req, res) {
+async function handlerTable(req, res) {
   const data = req.body;
   console.log(data.id);
 
@@ -11,24 +11,24 @@ async function handlerOrder(req, res) {
   const db = client.db();
 
   if (req.method === "POST") {
-    const result = await db.collection("orders").insertOne(data);
+    const result = await db.collection("tables").insertOne(data);
   }
   if(req.method === "DELETE"){
-    const result = await db.collection('orders').deleteOne({ _id: ObjectId(data.id) });
+    const result = await db.collection('tables').deleteOne({ _id: ObjectId(data.id) });
   }
   if(req.method === "PUT"){
     console.log(data);
-    const result = await db.collection('orders').updateOne(
-      { _id: ObjectId(data.id) },
+    const result = await db.collection('tables').updateOne(
+      { _id:ObjectId(data.id)},
       {
-        $set: { oldPrice: data.price, price: data.newPrice },
+        $set: { table: data.table },
         $currentDate: { lastModified: true }
       }
     );
   }
 
-  res.status(201).json({ message: "Order successfully !" });
+  res.status(201).json({ message: "table successfully !" });
   client.close();
 }
 
-export default handlerOrder;
+export default handlerTable;

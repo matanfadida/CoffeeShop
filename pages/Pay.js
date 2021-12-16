@@ -1,8 +1,8 @@
 import { MongoClient } from "mongodb";
 import Cart from "../components/Cart/Cart";
 
-const Pay = () => {
-  return <Cart />;
+const Pay = (props) => {
+  return <Cart ordersData={props.ordersData} _id={props.id} totalAmount={props.totalAmount} tablesData={props.tablesData} idTable={props.idTable}/>;
 };
 
 export async function getStaticProps() {
@@ -12,24 +12,29 @@ export async function getStaticProps() {
 
   const db = client.db();
 
-  const result = db.collection("orders");
+  const resultOrders = db.collection("orders");
 
-  const ordersData = await result.find().toArray();
-  // console.log(ordersData.filter(data => data._id.toString() === "61b27e82eb61e643cac29fe2"));
-  return { props: { a: "a" } };
-  // client.close();
-  // return { props: {ordersData: ordersData.data[0].map(item => ({
-  //     name: item.name,
-  //     description: item.description,
-  //     image: item.image,
-  //     price: item.price,
-  //     oldPrice: item.oldPrice,
-  //     availability: item.availability,
-  //     table: item.table,
-  //     category: item.category,
-  //     id: item._id.toString(),
+  const ordersData = await resultOrders.find().toArray();
 
-  // }))} };
+  const resultTables = db.collection("tables");
+
+  const tablesData = await resultTables.find().toArray();
+
+  
+  
+  return {
+    props: {
+      idTable: tablesData[0]._id.toString(),
+      tablesData: tablesData.map(table => table.table),
+      totalAmount: ordersData.map((data) => ({
+        totalAmount: data.totalAmount,
+      })),
+      id: ordersData.map((data) => ({ id: data._id.toString() })),
+      ordersData: ordersData.map((data) => ({
+        data: data.data,
+      })),
+    },
+  };
 }
 
 export default Pay;

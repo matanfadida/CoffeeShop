@@ -5,12 +5,18 @@ import { Fragment, useContext, useState } from "react";
 import AuthContext from "../state/auth-context";
 import Card from "../UI/Card";
 import CartItem from "./CartItem";
+import Table from "../Clients/Table";
 
-const Cart = () => {
+const Cart = (props) => {
   const ctx = useContext(AuthContext);
   const router = useRouter();
   const [sendReq, setSendReq] = useState(false);
   const [ordered, setOrdered] = useState(false);
+  const [sit, setSit] = useState("");
+  const [enteredTable, setEnteredTable] = useState(0);
+  const [enteredChair, setEnteredChair] = useState(0);
+  const table = props.tablesData;
+  console.log(table[0][0]);
 
   const totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
 
@@ -21,12 +27,45 @@ const Cart = () => {
     router.push("/Menu");
   };
 
+  const enteredTableHandler = (event) => {
+    setEnteredTable(event.target.value);
+  };
+  const enteredChairHandler = (event) => {
+    setEnteredChair(event.target.value);
+  };
+
+  const selectSitHandler = (event) => {
+    setSit(event.target.value);
+  };
+
+  
 
   const OrderHandler = async () => {
+    if (sit === "inside" && table[0][0].inside[enteredTable][enteredChair - 1] === 0) {
+      console.log("the chair occupied try other");
+      return;
+    }
     setSendReq(true);
+      if(sit === "inside"){
+        table[0][0].inside[enteredTable-1][enteredChair-1] = 0;
+      }
+      else{
+        table[0][0].outside[enteredTable-1][enteredChair-1] = 0;
+      }
+      await fetch("/api/items/table-data", {
+      method: "PUT",
+      body: JSON.stringify({
+        id:props.idTable,
+        table:table,
+      }),
+      headers: { "Content-Type": "application/json" },
+    });
     const response = await fetch("/api/items/order-data", {
       method: "POST",
-      body: JSON.stringify({ totalAmount: totalAmount,data: ctx.dynamicItems }),
+      body: JSON.stringify({
+        totalAmount: totalAmount,
+        data: ctx.dynamicItems,
+      }),
       headers: { "Content-Type": "application/json" },
     });
     setSendReq(false);
@@ -76,12 +115,29 @@ const Cart = () => {
         ) : (
           <button onClick={OrderHandler}>Order</button>
         )}
-        <br/>
+        <br />
+        <label>Where Sit?</label>
+        <select name="sit" id="sit" onChange={selectSitHandler}>
+          <option value="all">All</option>
+          <option value="inside">inside</option>
+          <option value="outside">outside</option>
+        </select>
+        <br />
+        <label>open to sit</label>
+        {sit === "inside" && (
+          <p>
+            {table[0][0].inside.map((chair, index) => (
+              <Table key={index} id={index} chair={chair} />
+            ))}
+          </p>
+        )}
+
+        <br />
         <span>choose a table</span>
-        <input type="number" />
-        <br/>
+        <input type="number" onChange={enteredTableHandler} />
+        <br />
         <span>choose a Chair</span>
-        <input type="number" />
+        <input type="number" onChange={enteredChairHandler} />
       </div>
     </Card>
   );

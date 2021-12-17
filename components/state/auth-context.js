@@ -1,7 +1,9 @@
+import { useSession, signOut } from "next-auth/react";
 import React, { useReducer, useState } from "react";
 
 const AuthContext = React.createContext({
-  items: [],
+  changeOrdersHandler: () => {},
+  ordered: false,
   addItemToCartHandler: (item) => {},
   removeItemFromCartHandler: (id) => {},
   fatchAute: (url) => {},
@@ -81,25 +83,33 @@ const cartReducer = (state, action) => {
 /////
 
 export const AuthContextProvider = (props) => {
-  const [items, setItems] = useState([]);
   const [Loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
+  const [ordered, setOrdered] = useState(false);
   const [cartStateReduce, dispatchCartState] = useReducer(
     cartReducer,
     defaultState
   );
+  const { data: session } = useSession();
+  let userIsLoggedIn = false;
+  console.log(session);
+  if (session){
+    userIsLoggedIn = true;
+  }
 
   let error_;
-
-  const userIsLoggedIn = !!token;
 
   const isLoginHandler = (token) => {
     setToken(token);
   };
 
   const isLogoutHanlder = () => {
-    setToken(null);
+    signOut();
   };
+
+  const changeOrdersHandler = () => {
+    setOrdered(true);
+  }
 
   const addItemToCartHandler = (item) => {
     dispatchCartState({ type: "ADD", item: item });
@@ -141,7 +151,8 @@ export const AuthContextProvider = (props) => {
   };
 
   const contextValue = {
-    items: items,
+    changeOrdersHandler,
+    ordered,
     addItemToCartHandler,
     removeItemFromCartHandler,
     cleanItemHandler,

@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import AuthContext from "../state/auth-context";
 import Card from "../UI/Card";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 import style from "./LoginAdmin.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,14 +12,14 @@ const LoginAdmin = () => {
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
 
-  const onSubmitHandlerLogin = async(event) => {
+  const onSubmitHandlerLogin = async (event) => {
     event.preventDefault();
     const result = await signIn("credentials", {
       redirect: false,
       email: enteredEmail,
       password: enteredPassword,
     });
-    if(!result.error){
+    if (!result.error) {
       //asd
     }
     console.log(result);

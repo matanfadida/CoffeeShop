@@ -17,7 +17,6 @@ async function handlerOrder(req, res) {
     const result = await db.collection('orders').deleteOne({ _id: ObjectId(data.id) });
   }
   if(req.method === "PUT"){
-    console.log(data);
     const result = await db.collection('orders').updateOne(
       { _id: ObjectId(data.id) },
       {

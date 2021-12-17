@@ -17,7 +17,7 @@ const ShowItems = (props) => {
 
   let availability = props.availability === "yes";
   let partyState = props.PartyTime && props.party === 'party';
-  let ThursdayState = props.Thursday;
+  let ThursdayState = props.Thursday && ctx.isLoggedIn;
   let stateAvailability = <li>{props.availability}</li>;
 
   if (partyState){

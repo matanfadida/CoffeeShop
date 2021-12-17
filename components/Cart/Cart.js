@@ -11,7 +11,6 @@ const Cart = (props) => {
   const ctx = useContext(AuthContext);
   const router = useRouter();
   const [sendReq, setSendReq] = useState(false);
-  const [ordered, setOrdered] = useState(false);
   const [sit, setSit] = useState("");
   const [enteredTable, setEnteredTable] = useState(0);
   const [enteredChair, setEnteredChair] = useState(0);
@@ -91,7 +90,7 @@ const Cart = (props) => {
       headers: { "Content-Type": "application/json" },
     });
     setSendReq(false);
-    setOrdered(true);
+    ctx.changeOrdersHandler();
     router.push("/Menu");
   };
 
@@ -132,13 +131,13 @@ const Cart = (props) => {
       </div>
       <div>
         <button onClick={BackBuyHandler}>Close</button>
-        {ordered ? (
+        {ctx.ordered ? (
           <button onClick={OrderHandler}>chenge Order</button>
         ) : (
           <button onClick={OrderHandler}>Order</button>
         )}
         <br />
-        <label>Where Sit?</label>
+        {!ctx.ordered && <Fragment><label>Where Sit?</label>
         <select name="sit" id="sit" onChange={selectSitHandler}>
           <option value="all">All</option>
           <option value="inside">inside</option>
@@ -147,7 +146,7 @@ const Cart = (props) => {
           {!outsideAvailability && <><br/><label>Sitting outside not available</label></>}
         <br />
         <label>open to sit</label>
-        {ShowTable}
+        {ShowTable}</Fragment>}
 
         <br />
         <span>choose a table</span>

@@ -17,14 +17,34 @@ async function handlerItem(req, res) {
     const result = await db.collection('items').deleteOne({ _id: ObjectId(data.id) });
   }
   if(req.method === "PUT"){
-    console.log(data);
-    const result = await db.collection('items').updateOne(
+    if(data.id){
+      const result = await db.collection('items').updateOne(
       { _id: ObjectId(data.id) },
       {
         $set: { oldPrice: data.price, price: data.newPrice },
         $currentDate: { lastModified: true }
       }
     );
+    }
+    else if(data.age >= 18){
+      await db.collection('items').updateMany(
+        { availability: 'no', category: 'alcohol' },
+        {
+          $set: { availability: 'yes' },
+          $currentDate: { lastModified: true }
+        }
+      );
+    }
+    else{
+      await db.collection('items').updateMany(
+        { availability: 'yes', category: 'alcohol' },
+        {
+          $set: { availability: 'no' },
+          $currentDate: { lastModified: true }
+        }
+      );
+    }
+    
   }
 
   res.status(201).json({ message: "Create item !" });

@@ -1,7 +1,10 @@
-import { Fragment, useEffect, useState } from "react";
+import { getSession } from "next-auth/react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import ShowItems from "../Menu/ShowItems";
+import AuthContext from "../state/auth-context";
 
 const Menu = (props) => {
+  const ctx = useContext(AuthContext);
   const [itemsFilter, setItemsFilter] = useState(props.items);
   const [party, setParty] = useState("");
   const [Thursday, setThursday] = useState(false);
@@ -59,16 +62,46 @@ const Menu = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (current.getDay() === 4) {
-      setThursday(true);
-      setItemsFilter(filterItems(current.getDay(), "thursday"))
+  useEffect(async() => {
+    // if (current.getDay() === 4) {
+    //   setThursday(true);
+    //   setItemsFilter(filterItems(current.getDay(), "thursday"))
+    // }
+    // else{
+    //   setThursday(false);
+    //   setItemsFilter(props.items);
+    // }
+    console.log(ctx.isLoggedIn);
+    if(ctx.isLoggedIn){
+      const session = await getSession();
+        if(session){
+          const age = +session.user.age;
+          console.log(session.user.age);
+          if (age >= 18){
+            await fetch("/api/items/data", {
+              method: "PUT",
+              body: JSON.stringify({
+                age: age,
+                availability: props.availability,
+                category: props.category,
+              }),
+              headers: { "Content-Type": "application/json" },
+            });
+          }
+        }
     }
     else{
-      setThursday(false);
-      setItemsFilter(props.items);
+      console.log('else')
+      await fetch("/api/items/data", {
+        method: "PUT",
+        body: JSON.stringify({
+          availability: props.availability,
+          category: props.category,
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
     }
-  },[])
+  },[ctx.isLoggedIn])
 
   const selectSitHandler = (event) => {
     if (event.target.value === "all") {

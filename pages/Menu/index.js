@@ -1,11 +1,7 @@
 import { MongoClient } from "mongodb";
-import { useContext } from "react";
 import MenuClient from "../../components/Clients/MenuClient";
-import AuthContext from "../../components/state/auth-context";
 
 const Menu = (props) => {
-  const ctx = useContext(AuthContext);
-
   return <MenuClient items={props.itemsData} />;
 };
 
@@ -23,20 +19,23 @@ export async function getStaticProps() {
   const itemsData = await result.find().toArray();
 
   client.close();
-  return { props: {itemsData: itemsData.map(item => ({
-      name: item.name,
-      description: item.description,
-      image: item.image,
-      price: item.price,
-      oldPrice: item.oldPrice,
-      availability: item.availability,
-      table: item.table,
-      category: item.category,
-      party: item.party,
-      thursday: item.thursday,
-      id: item._id.toString(),
-
-  }))} };
+  return {
+    props: {
+      itemsData: itemsData.map((item) => ({
+        name: item.name,
+        description: item.description,
+        image: item.image,
+        price: item.price,
+        oldPrice: item.oldPrice,
+        availability: item.availability,
+        table: item.table,
+        category: item.category,
+        party: item.party,
+        thursday: item.thursday,
+        id: item._id.toString(),
+      })),
+    },
+  };
 }
 
 export default Menu;

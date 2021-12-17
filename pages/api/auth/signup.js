@@ -2,6 +2,18 @@ import { MongoClient } from "mongodb";
 import { hash } from "bcryptjs";
 
 async function handler(req, res) {
+  if(req.method === "GET"){
+    const client = await MongoClient.connect(
+      "mongodb://matan:matanfadida@cluster0-shard-00-00.u8zmn.mongodb.net:27017,cluster0-shard-00-01.u8zmn.mongodb.net:27017,cluster0-shard-00-02.u8zmn.mongodb.net:27017/coffe-database?ssl=true&replicaSet=atlas-lrttc1-shard-0&authSource=admin&retryWrites=true&w=majority"
+    );
+  
+    const db = client.db();
+  
+    const exsitingUser = await db.collection("users").findOne({ email: data.email });
+
+    return exsitingUser;
+  }
+
   if (req.method !== "POST") {
     return;
   }

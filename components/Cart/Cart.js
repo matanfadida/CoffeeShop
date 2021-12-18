@@ -84,6 +84,7 @@ const Cart = (props) => {
     const response = await fetch("/api/items/order-data", {
       method: "POST",
       body: JSON.stringify({
+        chair:{sit:sit, table:[enteredTable-1], chair:[enteredChair-1]},
         totalAmount: totalAmount,
         data: ctx.dynamicItems,
       }),

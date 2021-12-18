@@ -2,7 +2,16 @@ import { MongoClient } from "mongodb";
 import Barista from "../../components/Baristas/Barista";
 
 const baristas = (props) => {
-  return <Barista ordersData={props.ordersData} _id={props.id} totalAmount={props.totalAmount} />;
+  return (
+    <Barista
+      ordersData={props.ordersData}
+      _id={props.id}
+      totalAmount={props.totalAmount}
+      place={props.place}
+      tablesData={props.tablesData}
+      idTable={props.idTable}
+    />
+  );
 };
 
 export async function getStaticProps() {
@@ -16,10 +25,17 @@ export async function getStaticProps() {
 
   const ordersData = await result.find().toArray();
 
+  const resultTables = db.collection("tables");
+
+  const tablesData = await resultTables.find().toArray();
+
   client.close();
 
   return {
     props: {
+      idTable: tablesData[0]._id.toString(),
+      tablesData: tablesData.map(table => table.table),
+      place: ordersData.map((data) => (data.chair )),
       totalAmount: ordersData.map((data) => ({
         totalAmount: data.totalAmount,
       })),

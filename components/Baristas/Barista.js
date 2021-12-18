@@ -1,20 +1,29 @@
-import { Fragment } from "react";
+import ChooesTable from "../Clients/choos-table";
 import Card from "../UI/Card";
 import ShowOrder from "./show-order";
 
 const Barista = (props) => {
-  console.log(props._id);
+  // console.log(props._id[0].id);
+
   return (
     <div>
       {
         <ul>
-          {props.ordersData.map((data,index) => (
-            <Card>
-              <ShowOrder key={props._id[index]} ordersData={data.data} />
+          {props.ordersData.map((data, index) => (
+            <Card key={props._id[index].id}>
+              <ShowOrder key={props._id[index].id} ordersData={data.data} />
               <label>total Amount: </label>
               {props.totalAmount[index].totalAmount}
-              <br/>
-              <button>confirm the order</button>
+              <br />
+              
+              <ChooesTable
+                ordersData={data.data}
+                totalAmount={props.totalAmount[index].totalAmount}
+                id={props._id[index]}
+                tablesData={props.tablesData}
+                idTable={props.idTable}
+                place={props.place[index]}
+              />
             </Card>
           ))}
         </ul>

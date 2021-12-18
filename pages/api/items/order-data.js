@@ -17,13 +17,27 @@ async function handlerOrder(req, res) {
     const result = await db.collection('orders').deleteOne({ _id: ObjectId(data.id) });
   }
   if(req.method === "PUT"){
-    const result = await db.collection('orders').updateOne(
+    if(data.price){
+      await db.collection('orders').updateOne(
       { _id: ObjectId(data.id) },
       {
         $set: { oldPrice: data.price, price: data.newPrice },
         $currentDate: { lastModified: true }
       }
     );
+    }else{
+      console.log('order')
+      console.log(data.id)
+      await db.collection('orders').updateOne(
+        { _id: ObjectId(data.id) },
+        {
+          $set: data,
+          $currentDate: { lastModified: true }
+        }
+      );
+    }
+
+    
   }
 
   res.status(201).json({ message: "Order successfully !" });

@@ -19,8 +19,6 @@ export async function getStaticProps() {
   const resultTables = db.collection("tables");
 
   const tablesData = await resultTables.find().toArray();
-
-  
   
   return {
     props: {

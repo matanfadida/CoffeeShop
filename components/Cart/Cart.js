@@ -1,11 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import AuthContext from "../state/auth-context";
 import Card from "../UI/Card";
 import CartItem from "./CartItem";
 import Table from "../Clients/Table";
+import { getSession } from "next-auth/react";
+import ChooesTable from "../Clients/choos-table";
 
 const Cart = (props) => {
   const ctx = useContext(AuthContext);
@@ -16,10 +18,19 @@ const Cart = (props) => {
   const [enteredChair, setEnteredChair] = useState(0);
   const table = props.tablesData;
   const current = new Date();
+
+  let place = null;
+  let emailUser = "";
   let outsideAvailability = false;
-  if(current.getDay() !== 1){
+  if (current.getDay() !== 1) {
     outsideAvailability = true;
   }
+
+  getSession().then((session) => {
+    if (session) {
+      emailUser = session.user.email;
+    }
+  });
 
   const totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
 
@@ -42,51 +53,71 @@ const Cart = (props) => {
   };
 
   let ShowTable;
-  
-  if(sit === "inside"){
+
+  if (sit === "inside") {
     ShowTable = (
       <p>
         {table[0].inside.map((chair, index) => (
           <Table key={index} id={index} chair={chair} />
         ))}
       </p>
-    )}
-  else if(sit === "outside"){
+    );
+  } else if (sit === "outside") {
     ShowTable = (
       <p>
         {table[0].outside.map((chair, index) => (
           <Table key={index} id={index} chair={chair} />
         ))}
       </p>
-    )
+    );
   }
+  const ChangeOrderHandler = async () => {};
 
   const OrderHandler = async () => {
-    if ((sit === "inside" && table[0].inside[enteredTable-1][enteredChair - 1] === 0) || (sit === "outside" && table[0].inside[enteredTable-1][enteredChair - 1] === 0)) {
+    if (
+      (sit === "inside" &&
+        table[0].inside[enteredTable - 1][enteredChair - 1] === 0) ||
+      (sit === "outside" &&
+        table[0].inside[enteredTable - 1][enteredChair - 1] === 0)
+    ) {
       console.log("the chair occupied try other");
       return;
     }
     setSendReq(true);
-      if(sit === "inside"){
-        table[0].inside[enteredTable-1][enteredChair-1] = 0;
-      }
-      else{
-        table[0].outside[enteredTable-1][enteredChair-1] = 0;
-      }
-      await fetch("/api/items/table-data", {
+    if (sit === "inside") {
+      table[0].inside[enteredTable - 1][enteredChair - 1] = 0;
+      place = {
+        sit: "inside",
+        table: enteredTable - 1,
+        chair: enteredChair - 1,
+      };
+    } else {
+      table[0].outside[enteredTable - 1][enteredChair - 1] = 0;
+      place = {
+        sit: "outside",
+        table: enteredTable - 1,
+        chair: enteredChair - 1,
+      };
+    }
+    await fetch("/api/items/table-data", {
       method: "PUT",
       body: JSON.stringify({
-        id:props.idTable,
-        table:{inside: table[0].inside, outside: table[0].outside},
+        id: props.idTable,
+        table: { inside: table[0].inside, outside: table[0].outside },
       }),
       headers: { "Content-Type": "application/json" },
     });
     const response = await fetch("/api/items/order-data", {
       method: "POST",
       body: JSON.stringify({
-        chair:{sit:sit, table:[enteredTable-1], chair:[enteredChair-1]},
+        chair: {
+          sit: sit,
+          table: [enteredTable - 1],
+          chair: [enteredChair - 1],
+        },
         totalAmount: totalAmount,
         data: ctx.dynamicItems,
+        user: emailUser,
       }),
       headers: { "Content-Type": "application/json" },
     });
@@ -131,30 +162,55 @@ const Cart = (props) => {
         <span>{totalAmount}</span>
       </div>
       <div>
-        <button onClick={BackBuyHandler}>Close</button>
-        {ctx.ordered ? (
-          <button onClick={OrderHandler}>chenge Order</button>
-        ) : (
-          <button onClick={OrderHandler}>Order</button>
+        {!ctx.baristaChange && <button onClick={BackBuyHandler}>Close</button>}
+        {ctx.baristaChange && (
+          <ChooesTable
+            ordersData={ctx.dynamicItems}
+            totalAmount={totalAmount}
+            id={ctx.getOrderId}
+            tablesData={props.tablesData}
+            idTable={props.idTable}
+            place={ctx.place}
+          />
         )}
-        <br />
-        {!ctx.ordered && <Fragment><label>Where Sit?</label>
-        <select name="sit" id="sit" onChange={selectSitHandler}>
-          <option value="all">All</option>
-          <option value="inside">inside</option>
-          {outsideAvailability && <option value="outside">outside</option>}
-        </select>
-          {!outsideAvailability && <><br/><label>Sitting outside not available</label></>}
-        <br />
-        <label>open to sit</label>
-        {ShowTable}</Fragment>}
+        {!ctx.baristaChange && (
+          <Fragment>
+            {ctx.ordered ? (
+              <button onClick={OrderHandler}>chenge Order</button>
+            ) : (
+              <button onClick={OrderHandler}>Order</button>
+            )}
+            <br />
+            {!ctx.ordered && (
+              <Fragment>
+                <label>Where Sit?</label>
+                <select name="sit" id="sit" onChange={selectSitHandler}>
+                  <option value="all">All</option>
+                  <option value="inside">inside</option>
+                  {outsideAvailability && (
+                    <option value="outside">outside</option>
+                  )}
+                </select>
+                {!outsideAvailability && (
+                  <>
+                    <br />
+                    <label>Sitting outside not available</label>
+                  </>
+                )}
+                <br />
+                <label>open to sit</label>
+                {ShowTable}
+              </Fragment>
+            )}
 
-        <br />
-        <span>choose a table</span>
-        <input type="number" onChange={enteredTableHandler} />
-        <br />
-        <span>choose a Chair</span>
-        <input type="number" onChange={enteredChairHandler} />
+            <br />
+            <span>choose a table</span>
+            <input type="number" onChange={enteredTableHandler} />
+            <br />
+            <span>choose a Chair</span>
+            <input type="number" onChange={enteredChairHandler} />
+          </Fragment>
+        )}
       </div>
     </Card>
   );

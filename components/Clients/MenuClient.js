@@ -71,7 +71,7 @@ const Menu = (props) => {
     //   setThursday(false);
     //   setItemsFilter(props.items);
     // }
-    console.log(ctx.isLoggedIn);
+    
     if(ctx.isLoggedIn){
       const session = await getSession();
         if(session){
@@ -91,7 +91,6 @@ const Menu = (props) => {
         }
     }
     else{
-      console.log('else')
       await fetch("/api/items/data", {
         method: "PUT",
         body: JSON.stringify({

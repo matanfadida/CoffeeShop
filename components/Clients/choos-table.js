@@ -18,7 +18,7 @@ const ChooesTable = (props) => {
     sit: chooesSit,
     table: chooesTable,
     chair: chooseChair,
-  } = props.place;
+  } = props.place[0];
 
   const numTable = +chooesTable;
   const numChair = +chooseChair;

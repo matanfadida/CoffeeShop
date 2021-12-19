@@ -20,6 +20,7 @@ export async function getStaticProps() {
 
   client.close();
   return {
+    revalidate: 1,
     props: {
       itemsData: itemsData.map((item) => ({
         name: item.name,

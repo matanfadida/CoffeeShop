@@ -3,14 +3,20 @@ import React, { useReducer, useState } from "react";
 
 const AuthContext = React.createContext({
   changeOrdersHandler: () => {},
+  getOrderId: '',
+  setOrderId: (id) => {},
   ordered: false,
+  baristaChange: false,
+  place: {},
+  changeBaristasHandler: () => {},
+  collectionChair: (place) => {},
   addItemToCartHandler: (item) => {},
   removeItemFromCartHandler: (id) => {},
   fatchAute: (url) => {},
   Loading: false,
   dynamicItems: [],
   totalAmount: 0,
-  error: '',
+  error: "",
   isLoggedIn: false,
   token: "",
   login: (token) => {},
@@ -86,6 +92,9 @@ export const AuthContextProvider = (props) => {
   const [Loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
   const [ordered, setOrdered] = useState(false);
+  const [place, setPlace] = useState({});
+  const [getOrderId, setOrderId] = useState('');
+  const [baristaChange, setBaristaChange] = useState(false);
   const [cartStateReduce, dispatchCartState] = useReducer(
     cartReducer,
     defaultState
@@ -93,7 +102,7 @@ export const AuthContextProvider = (props) => {
   const { data: session } = useSession();
   let userIsLoggedIn = false;
   console.log(session);
-  if (session){
+  if (session) {
     userIsLoggedIn = true;
   }
 
@@ -109,7 +118,19 @@ export const AuthContextProvider = (props) => {
 
   const changeOrdersHandler = () => {
     setOrdered(true);
-  }
+  };
+
+  const changeBaristasHandler = () => {
+    setBaristaChange(true);
+  };
+
+  const collectionChair = (place) => {
+    setPlace(place);
+  };
+
+  const setOrderIdHandler = (id) =>{
+    setOrderId(id);
+  };
 
   const addItemToCartHandler = (item) => {
     dispatchCartState({ type: "ADD", item: item });
@@ -152,7 +173,13 @@ export const AuthContextProvider = (props) => {
 
   const contextValue = {
     changeOrdersHandler,
+    getOrderId,
+    setOrderId:setOrderIdHandler,
     ordered,
+    baristaChange,
+    collectionChair,
+    place,
+    changeBaristasHandler,
     addItemToCartHandler,
     removeItemFromCartHandler,
     cleanItemHandler,
@@ -161,7 +188,7 @@ export const AuthContextProvider = (props) => {
     totalAmount: cartStateReduce.totalAmount,
     Loading,
     isLoggedIn: userIsLoggedIn,
-    error:error_,
+    error: error_,
     token: token,
     login: isLoginHandler,
     logout: isLogoutHanlder,

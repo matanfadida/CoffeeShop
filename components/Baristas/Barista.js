@@ -1,6 +1,7 @@
 import ChooesTable from "../Clients/choos-table";
 import Card from "../UI/Card";
 import ShowOrder from "./show-order";
+import Link from 'next/link';
 
 const Barista = (props) => {
   // console.log(props._id[0].id);
@@ -15,15 +16,7 @@ const Barista = (props) => {
               <label>total Amount: </label>
               {props.totalAmount[index].totalAmount}
               <br />
-              
-              <ChooesTable
-                ordersData={data.data}
-                totalAmount={props.totalAmount[index].totalAmount}
-                id={props._id[index]}
-                tablesData={props.tablesData}
-                idTable={props.idTable}
-                place={props.place[index]}
-              />
+              <Link href={`/Baristas/${props._id[index].id}`}>Change the Order</Link>
             </Card>
           ))}
         </ul>

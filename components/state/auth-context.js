@@ -3,7 +3,9 @@ import React, { useReducer, useState } from "react";
 
 const AuthContext = React.createContext({
   changeOrdersHandler: () => {},
-  getOrderId: '',
+  getOrderId: "",
+  getUser: "",
+  setUser: (email) => {},
   setOrderId: (id) => {},
   ordered: false,
   baristaChange: false,
@@ -93,7 +95,8 @@ export const AuthContextProvider = (props) => {
   const [token, setToken] = useState(null);
   const [ordered, setOrdered] = useState(false);
   const [place, setPlace] = useState({});
-  const [getOrderId, setOrderId] = useState('');
+  const [getOrderId, setOrderId] = useState("");
+  const [getUser, setUser] = useState("");
   const [baristaChange, setBaristaChange] = useState(false);
   const [cartStateReduce, dispatchCartState] = useReducer(
     cartReducer,
@@ -128,8 +131,12 @@ export const AuthContextProvider = (props) => {
     setPlace(place);
   };
 
-  const setOrderIdHandler = (id) =>{
+  const setOrderIdHandler = (id) => {
     setOrderId(id);
+  };
+  
+  const setUserHandler = (email) => {
+    setUser(email);
   };
 
   const addItemToCartHandler = (item) => {
@@ -174,7 +181,9 @@ export const AuthContextProvider = (props) => {
   const contextValue = {
     changeOrdersHandler,
     getOrderId,
-    setOrderId:setOrderIdHandler,
+    getUser,
+    setUser:setUserHandler,
+    setOrderId: setOrderIdHandler,
     ordered,
     baristaChange,
     collectionChair,

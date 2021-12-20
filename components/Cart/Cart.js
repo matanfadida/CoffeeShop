@@ -8,6 +8,7 @@ import CartItem from "./CartItem";
 import Table from "../Clients/Table";
 import { getSession } from "next-auth/react";
 import ChooesTable from "../Clients/choos-table";
+import Link from "next/link";
 
 const Cart = (props) => {
   const ctx = useContext(AuthContext);
@@ -20,7 +21,7 @@ const Cart = (props) => {
   const current = new Date();
 
   let place = null;
-  let emailUser = "";
+  let emailUser = props.guest[0].toString();
   let outsideAvailability = false;
   if (current.getDay() !== 1) {
     outsideAvailability = true;
@@ -71,7 +72,6 @@ const Cart = (props) => {
       </p>
     );
   }
-  const ChangeOrderHandler = async () => {};
 
   const OrderHandler = async () => {
     if (
@@ -125,7 +125,6 @@ const Cart = (props) => {
     ctx.changeOrdersHandler();
     router.push("/Menu");
   };
-
   const cartItems = (
     <ul>
       {ctx.dynamicItems.map((item) => (
@@ -176,7 +175,7 @@ const Cart = (props) => {
         {!ctx.baristaChange && (
           <Fragment>
             {ctx.ordered ? (
-              <button onClick={OrderHandler}>chenge Order</button>
+              <Link href={`your-ordered/${emailUser.toString()}`}>change order</Link>
             ) : (
               <button onClick={OrderHandler}>Order</button>
             )}

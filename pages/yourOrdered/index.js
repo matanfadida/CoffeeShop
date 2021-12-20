@@ -1,15 +1,15 @@
 import { MongoClient } from "mongodb";
-import Cart from "../components/Cart/Cart";
+import Ordered from '../../components/Clients/Ordered';
 
-const Pay = (props) => {
+const OrderedClient = (props) => {
   return (
-    <Cart
+    <Ordered
       ordersData={props.ordersData}
       _id={props.id}
       totalAmount={props.totalAmount}
+      place={props.place}
       tablesData={props.tablesData}
       idTable={props.idTable}
-      guest={props.guest}
     />
   );
 };
@@ -21,23 +21,21 @@ export async function getStaticProps() {
 
   const db = client.db();
 
-  const resultOrders = db.collection("orders");
+  const result = db.collection("orders");
 
-  const ordersData = await resultOrders.find().toArray();
+  const ordersData = await result.find().toArray();
 
   const resultTables = db.collection("tables");
 
   const tablesData = await resultTables.find().toArray();
 
-  const resultGuests = db.collection("guests");
-
-  const guestsData = await resultGuests.find().toArray();
+  client.close();
 
   return {
     props: {
-      guest:guestsData.map(guest => guest.guests),
       idTable: tablesData[0]._id.toString(),
-      tablesData: tablesData.map((table) => table.table),
+      tablesData: tablesData.map(table => table.table),
+      place: ordersData.map((data) => (data.chair )),
       totalAmount: ordersData.map((data) => ({
         totalAmount: data.totalAmount,
       })),
@@ -49,4 +47,4 @@ export async function getStaticProps() {
   };
 }
 
-export default Pay;
+export default OrderedClient;

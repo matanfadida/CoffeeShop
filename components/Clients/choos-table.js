@@ -23,7 +23,6 @@ const ChooesTable = (props) => {
   const numTable = +chooesTable;
   const numChair = +chooseChair;
 
-
   const enteredTableHandler = (event) => {
     setEnteredTable(event.target.value);
   };
@@ -56,44 +55,47 @@ const ChooesTable = (props) => {
   }
 
   const ChangeSitHandler = async () => {
-    if (enteredChair !== 0 && enteredTable !== 0) {
-      if (
-        (sit === "inside" &&
-          table[0].inside[enteredTable - 1][enteredChair - 1] === 0) ||
-        (sit === "outside" &&
-          table[0].inside[enteredTable - 1][enteredChair - 1] === 0)
-      ) {
-        console.log("the chair occupied try other");
-        return;
+    if (enteredChair !== "" && enteredTable !== "") {
+      if (enteredChair !== 0 && enteredTable !== 0) {
+        if (
+          (sit === "inside" &&
+            table[0].inside[enteredTable - 1][enteredChair - 1] === 0) ||
+          (sit === "outside" &&
+            table[0].inside[enteredTable - 1][enteredChair - 1] === 0)
+        ) {
+          console.log("the chair occupied try other");
+          return;
+        }
+        if (sit === "inside") {
+          table[0].inside[enteredTable - 1][enteredChair - 1] = 0;
+          table[0].inside[numTable][numChair] = numChair + 1;
+        } else {
+          table[0].outside[enteredTable - 1][enteredChair - 1] = 0;
+          table[0].outside[numTable][numChair] = numChair + 1;
+        }
+        await fetch("/api/items/table-data", {
+          method: "PUT",
+          body: JSON.stringify({
+            id: props.idTable,
+            table: { inside: table[0].inside, outside: table[0].outside },
+          }),
+          headers: { "Content-Type": "application/json" },
+        });
       }
-      if (sit === "inside") {
-        table[0].inside[enteredTable - 1][enteredChair - 1] = 0;
-        table[0].inside[numTable][numChair] = numChair+1;
-    } else {
-        table[0].outside[enteredTable - 1][enteredChair - 1] = 0;
-        table[0].outside[numTable][numChair] = numChair+1;
-      }
-      await fetch("/api/items/table-data", {
-        method: "PUT",
-        body: JSON.stringify({
-          id: props.idTable,
-          table: { inside: table[0].inside, outside: table[0].outside },
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
     }
-
+    console.log(ctx.getOrderId);
     const response = await fetch("/api/items/order-data", {
       method: "PUT",
       body: JSON.stringify({
         chair: {
-          sit: sit,
-          table: [enteredTable - 1],
-          chair: [enteredChair - 1],
+          sit: chooesSit,
+          table: chooesTable,
+          chair: chooseChair,
         },
         totalAmount: props.totalAmount,
         data: props.ordersData,
-        id:props.id.id,
+        id: ctx.getOrderId,
+        user: ctx.getUser,
       }),
       headers: { "Content-Type": "application/json" },
     });

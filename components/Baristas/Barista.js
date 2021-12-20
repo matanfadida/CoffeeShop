@@ -1,4 +1,3 @@
-import ChooesTable from "../Clients/choos-table";
 import Card from "../UI/Card";
 import ShowOrder from "./show-order";
 import Link from 'next/link';

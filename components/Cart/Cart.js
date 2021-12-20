@@ -15,6 +15,7 @@ const Cart = (props) => {
   const router = useRouter();
   const [sendReq, setSendReq] = useState(false);
   const [sit, setSit] = useState("");
+  const [vip, setVip] = useState("");
   const [enteredTable, setEnteredTable] = useState(0);
   const [enteredChair, setEnteredChair] = useState(0);
   const table = props.tablesData;
@@ -27,9 +28,18 @@ const Cart = (props) => {
     outsideAvailability = true;
   }
 
-  getSession().then((session) => {
+  getSession().then(async (session) => {
     if (session) {
       emailUser = session.user.email;
+    } else {
+      await fetch("/api/auth/guest", {
+        method: "PUT",
+        body: JSON.stringify({
+          id: "61c05ee22b74d3d1e9998dc9",
+          guest: (+props.guest[0] + 1).toString(),
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
     }
   });
 
@@ -47,6 +57,9 @@ const Cart = (props) => {
   };
   const enteredChairHandler = (event) => {
     setEnteredChair(event.target.value);
+  };
+  const selectVipHandler = (event) => {
+    setVip(event.target.value);
   };
 
   const selectSitHandler = (event) => {
@@ -118,6 +131,7 @@ const Cart = (props) => {
         totalAmount: totalAmount,
         data: ctx.dynamicItems,
         user: emailUser,
+        vip:vip
       }),
       headers: { "Content-Type": "application/json" },
     });
@@ -175,7 +189,9 @@ const Cart = (props) => {
         {!ctx.baristaChange && (
           <Fragment>
             {ctx.ordered ? (
-              <Link href={`your-ordered/${emailUser.toString()}`}>change order</Link>
+              <Link href={`yourOrdered/${emailUser.toString()}`}>
+                change order
+              </Link>
             ) : (
               <button onClick={OrderHandler}>Order</button>
             )}
@@ -199,15 +215,25 @@ const Cart = (props) => {
                 <br />
                 <label>open to sit</label>
                 {ShowTable}
+
+                <br />
+                <span>choose a table</span>
+                <input type="number" onChange={enteredTableHandler} />
+                <br />
+                <span>choose a Chair</span>
+                <input type="number" onChange={enteredChairHandler} />
+                <br />
+                {ctx.isLoggedIn && (
+                  <>
+                    <label>Vip?</label>
+                    <select name="vip" id="vip" onChange={selectVipHandler}>
+                      <option value="no">No</option>
+                      <option value="yes">yes</option>
+                    </select>
+                  </>
+                )}
               </Fragment>
             )}
-
-            <br />
-            <span>choose a table</span>
-            <input type="number" onChange={enteredTableHandler} />
-            <br />
-            <span>choose a Chair</span>
-            <input type="number" onChange={enteredChairHandler} />
           </Fragment>
         )}
       </div>

@@ -1,8 +1,29 @@
 import { MongoClient } from "mongodb";
+import { getSession } from "next-auth/react";
+import { useContext } from "react";
 import MenuClient from "../../components/Clients/MenuClient";
+import AuthContext from "../../components/state/auth-context";
 
 const Menu = (props) => {
-  return <MenuClient items={props.itemsData} />;
+  let count = 0;
+  const ctx = useContext(AuthContext);
+  if (ctx.isLoggedIn) {
+    getSession().then((session) => ctx.setUser(session.user.email));
+    const allOrderedOfUser = props.countCoffee.filter(
+      (data) => data.user === ctx.getUser
+    );
+    const onlyCoffee = allOrderedOfUser.filter(
+      (data, index) => data.data[index].category === "coffee"
+    );
+    console.log(onlyCoffee);
+    for (const i in onlyCoffee) {
+      for (const j in onlyCoffee[i].data) {
+        count += onlyCoffee[i].data[j].amount;
+      }
+    }
+  }
+
+  return <MenuClient items={props.itemsData} count={count} />;
 };
 
 export async function getStaticProps() {
@@ -18,10 +39,16 @@ export async function getStaticProps() {
 
   const itemsData = await result.find().toArray();
 
+  const countCoffee = await db.collection("orders").find().toArray();
+
   client.close();
   return {
     revalidate: 1,
     props: {
+      countCoffee: countCoffee.map((data) => ({
+        data: data.data,
+        user: data.user,
+      })),
       itemsData: itemsData.map((item) => ({
         name: item.name,
         description: item.description,

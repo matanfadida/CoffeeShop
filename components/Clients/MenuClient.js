@@ -1,3 +1,4 @@
+import React from "react";
 import { getSession } from "next-auth/react";
 import { Fragment, useContext, useEffect, useState } from "react";
 import ShowItems from "../Menu/ShowItems";
@@ -13,6 +14,7 @@ const Menu = (props) => {
     current.getMonth() + 1
   }-${current.getDate()}`;
 
+  console.log(props.count);
   let ShowLunch =
     current.getHours() <= 17 &&
     current.getHours() >= 14 &&
@@ -76,7 +78,6 @@ const Menu = (props) => {
       const session = await getSession();
         if(session){
           const age = +session.user.age;
-          console.log(session.user.age);
           if (age >= 18){
             await fetch("/api/items/data", {
               method: "PUT",
@@ -245,6 +246,7 @@ const Menu = (props) => {
             PartyTime
             party={party}
             Thursday={Thursday}
+            category={item.category}
           />
         ))}
       </ul>
@@ -252,4 +254,4 @@ const Menu = (props) => {
   );
 };
 
-export default Menu;
+export default React.memo(Menu);

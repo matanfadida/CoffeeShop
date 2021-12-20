@@ -9,6 +9,8 @@ const S = (props) => {
   const ctx = useContext(AuthContext);
   useEffect(() => {
     ctx.setOrderId(router.query.orderId);
+    const user = props.ordersData.map(data => data.user)
+    ctx.setUser(user.toString());
     ctx.collectionChair(props.ordersData.map(data => data.chair))
     ctx.changeBaristasHandler();
     props.ordersData.map((order) => ({
@@ -18,6 +20,7 @@ const S = (props) => {
           name: items.name,
           price: items.price,
           amount: items.amount,
+          category: items.category,
         })
       ),
     }));

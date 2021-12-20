@@ -27,9 +27,9 @@ async function handlerOrder(req, res) {
     );
     }else{
       console.log('order')
-      console.log(data.id)
+      console.log(data.user)
       await db.collection('orders').updateOne(
-        { _id: ObjectId(data.id) },
+        { _id: ObjectId(data.id.toString()) },
         {
           $set: data,
           $currentDate: { lastModified: true }

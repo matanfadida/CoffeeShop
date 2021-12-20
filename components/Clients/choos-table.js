@@ -7,6 +7,7 @@ const ChooesTable = (props) => {
   const ctx = useContext(AuthContext);
   const [enteredTable, setEnteredTable] = useState(0);
   const [enteredChair, setEnteredChair] = useState(0);
+  const [vip, setVip] = useState('');
   const [sit, setSit] = useState("");
   const current = new Date();
   let outsideAvailability = false;
@@ -28,6 +29,9 @@ const ChooesTable = (props) => {
   };
   const enteredChairHandler = (event) => {
     setEnteredChair(event.target.value);
+  };
+  const selectVipHandler = (event) => {
+    setVip(event.target.value);
   };
 
   const selectSitHandler = (event) => {
@@ -96,6 +100,7 @@ const ChooesTable = (props) => {
         data: props.ordersData,
         id: ctx.getOrderId,
         user: ctx.getUser,
+        vip:vip,
       }),
       headers: { "Content-Type": "application/json" },
     });
@@ -135,6 +140,13 @@ const ChooesTable = (props) => {
       <span>choose a Chair</span>
       <input type="number" onChange={enteredChairHandler} />
       <button onClick={ChangeSitHandler}>confirm the order</button>
+      <>
+        <label>Vip?</label>
+        <select name="vip" id="vip" onChange={selectVipHandler}>
+          <option value="no">No</option>
+          <option value="yes">yes</option>
+        </select>
+      </>
     </Fragment>
   );
 };

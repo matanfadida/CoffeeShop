@@ -11,6 +11,7 @@ const ShowOrder = (props) => {
             id={data.id}
             price={data.price}
             amount={data.amount}
+            vip={data.vip}
           />
         ))}
       </ul>}</div>

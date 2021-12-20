@@ -72,6 +72,7 @@ const ShowItems = (props) => {
       price: props.price,
       amount: amount,
       name: props.name,
+      category: props.category,
     });
   };
 

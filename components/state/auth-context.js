@@ -1,5 +1,5 @@
 import { useSession, signOut } from "next-auth/react";
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 
 const AuthContext = React.createContext({
   changeOrdersHandler: () => {},
@@ -104,7 +104,7 @@ export const AuthContextProvider = (props) => {
   );
   const { data: session } = useSession();
   let userIsLoggedIn = false;
-  console.log(session);
+
   if (session) {
     userIsLoggedIn = true;
   }
@@ -134,7 +134,7 @@ export const AuthContextProvider = (props) => {
   const setOrderIdHandler = (id) => {
     setOrderId(id);
   };
-  
+
   const setUserHandler = (email) => {
     setUser(email);
   };
@@ -182,7 +182,7 @@ export const AuthContextProvider = (props) => {
     changeOrdersHandler,
     getOrderId,
     getUser,
-    setUser:setUserHandler,
+    setUser: setUserHandler,
     setOrderId: setOrderIdHandler,
     ordered,
     baristaChange,

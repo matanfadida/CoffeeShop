@@ -17,7 +17,7 @@ async function handlerItem(req, res) {
     const result = await db.collection('items').deleteOne({ _id: ObjectId(data.id) });
   }
   if(req.method === "PUT"){
-    if(data.id){
+    if(data.price){
       const result = await db.collection('items').updateOne(
       { _id: ObjectId(data.id) },
       {
@@ -25,6 +25,15 @@ async function handlerItem(req, res) {
         $currentDate: { lastModified: true }
       }
     );
+    }
+    else if(data.count>=0) {
+      await db.collection('items').updateOne(
+        { _id: ObjectId(data.id) },
+        {
+          $inc: { count: 1 },
+          $currentDate: { lastModified: true }
+        }
+      );
     }
     else if(data.age >= 18){
       await db.collection('items').updateMany(

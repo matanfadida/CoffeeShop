@@ -65,7 +65,7 @@ const ChooesTable = (props) => {
           (sit === "inside" &&
             table[0].inside[enteredTable - 1][enteredChair - 1] === 0) ||
           (sit === "outside" &&
-            table[0].inside[enteredTable - 1][enteredChair - 1] === 0)
+            table[0].outside[enteredTable - 1][enteredChair - 1] === 0)
         ) {
           console.log("the chair occupied try other");
           return;
@@ -143,6 +143,7 @@ const ChooesTable = (props) => {
       <>
         <label>Vip?</label>
         <select name="vip" id="vip" onChange={selectVipHandler}>
+          <option value="">Chooes</option>
           <option value="no">No</option>
           <option value="yes">yes</option>
         </select>

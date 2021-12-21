@@ -3,6 +3,7 @@ import { getSession } from "next-auth/react";
 import { Fragment, useContext, useEffect, useState } from "react";
 import ShowItems from "../Menu/ShowItems";
 import AuthContext from "../state/auth-context";
+import { MaxKey } from "bson";
 
 const Menu = (props) => {
   const ctx = useContext(AuthContext);
@@ -60,6 +61,12 @@ const Menu = (props) => {
     }
     if (filterKey === "the day") {
       const filterItem = [props.items[current.getDay()]];
+      return filterItem;
+    }
+    if (filterKey === "most popular") {
+      var maxItem = Math.max(...props.items.map((item) => item.count));
+      const filterItem = props.items.filter((item) => item.count === maxItem );
+      console.log(filterItem);
       return filterItem;
     }
   };
@@ -170,6 +177,10 @@ const Menu = (props) => {
     else if (event.target.value === "the day"){
       setItemsFilter(filterItems(event.target.value, "the day"));
     }
+    else if (event.target.value === "most popular"){
+      setItemsFilter(filterItems(event.target.value, "most popular"));
+    }
+    
   };
 
   return (

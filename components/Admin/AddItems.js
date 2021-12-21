@@ -27,6 +27,7 @@ const AddItems = () => {
       category:enteredCategory,
       party:enteredParty,
       thursdat:enteredThursday,
+      count: 0,
     };
     
     const response = await fetch('/api/items/data', {

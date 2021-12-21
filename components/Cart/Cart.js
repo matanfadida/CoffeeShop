@@ -43,7 +43,21 @@ const Cart = (props) => {
     }
   });
 
-  const totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
+  let totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
+
+  if(ctx.baristaChange){
+
+    let totalAmount;
+  
+    if(+props.countCoffee === 10 && ctx.dynamicItems.map(item => item.category).includes('coffee')){
+      // alert("you have free coffe")
+      const coffee = (ctx.dynamicItems.filter(item => item.category === 'coffee'));
+      totalAmount = +ctx.totalAmount - (+coffee[0].price);
+      totalAmount = `$${totalAmount.toFixed(2)}`
+    }else{
+      totalAmount = `$${ctx.totalAmount.toFixed(2)}`
+    }
+  }
 
   const cartIteamAddHandler = (item) => {};
   const cartIteamRemoveHandler = (id) => {};
@@ -91,7 +105,7 @@ const Cart = (props) => {
       (sit === "inside" &&
         table[0].inside[enteredTable - 1][enteredChair - 1] === 0) ||
       (sit === "outside" &&
-        table[0].inside[enteredTable - 1][enteredChair - 1] === 0)
+        table[0].outside[enteredTable - 1][enteredChair - 1] === 0)
     ) {
       console.log("the chair occupied try other");
       return;
@@ -120,7 +134,7 @@ const Cart = (props) => {
       }),
       headers: { "Content-Type": "application/json" },
     });
-    const response = await fetch("/api/items/order-data", {
+    await fetch("/api/items/order-data", {
       method: "POST",
       body: JSON.stringify({
         chair: {
@@ -131,10 +145,21 @@ const Cart = (props) => {
         totalAmount: totalAmount,
         data: ctx.dynamicItems,
         user: emailUser,
-        vip:vip
+        vip: vip,
       }),
       headers: { "Content-Type": "application/json" },
     });
+    ctx.dynamicItems.map(
+      async (item) =>
+        await fetch("/api/items/data", {
+          method: "PUT",
+          body: JSON.stringify({
+            id: item.id,
+            count: 1,
+          }),
+          headers: { "Content-Type": "application/json" },
+        })
+    );
     setSendReq(false);
     ctx.changeOrdersHandler();
     router.push("/Menu");
@@ -227,6 +252,7 @@ const Cart = (props) => {
                   <>
                     <label>Vip?</label>
                     <select name="vip" id="vip" onChange={selectVipHandler}>
+                      <option value="">Chooes</option>
                       <option value="no">No</option>
                       <option value="yes">yes</option>
                     </select>

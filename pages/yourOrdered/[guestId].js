@@ -90,6 +90,7 @@ export async function getStaticPaths() {
           party: item.party,
           thursday: item.thursday,
           id: item._id.toString(),
+          count: item.count,
         })),
       },
     };

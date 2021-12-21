@@ -5,25 +5,29 @@ import MenuClient from "../../components/Clients/MenuClient";
 import AuthContext from "../../components/state/auth-context";
 
 const Menu = (props) => {
-  let count = 0;
-  const ctx = useContext(AuthContext);
-  if (ctx.isLoggedIn) {
-    getSession().then((session) => ctx.setUser(session.user.email));
-    const allOrderedOfUser = props.countCoffee.filter(
-      (data) => data.user === ctx.getUser
-    );
-    const onlyCoffee = allOrderedOfUser.filter(
-      (data, index) => data.data[index].category === "coffee"
-    );
-    console.log(onlyCoffee);
-    for (const i in onlyCoffee) {
-      for (const j in onlyCoffee[i].data) {
-        count += onlyCoffee[i].data[j].amount;
-      }
-    }
-  }
+  // let count = 0;
+  // const ctx = useContext(AuthContext);
+  // if (ctx.isLoggedIn) {
+  //   getSession().then((session) => ctx.setUser(session.user.email));
+  //   const allOrderedOfUser = props.countCoffee.filter(
+  //     (data) => data.user === ctx.getUser && data.vip === "yes"
+  //   );
 
-  return <MenuClient items={props.itemsData} count={count} />;
+  //   const onlyCoffee = allOrderedOfUser.map((data) => data.data);
+
+  //   for (const i in onlyCoffee) {
+  //     for (const j in onlyCoffee) {
+  //       if (
+  //         onlyCoffee[i][j] !== undefined &&
+  //         onlyCoffee[i][j].category === "coffee"
+  //       ) {
+  //         count += +onlyCoffee[i][j].amount;
+  //       }
+  //     }
+  //   }
+  // }
+
+  return <MenuClient items={props.itemsData} />;
 };
 
 export async function getStaticProps() {
@@ -39,16 +43,12 @@ export async function getStaticProps() {
 
   const itemsData = await result.find().toArray();
 
-  const countCoffee = await db.collection("orders").find().toArray();
+  // const countCoffee = await db.collection("orders").find().toArray();
 
   client.close();
   return {
     revalidate: 1,
     props: {
-      countCoffee: countCoffee.map((data) => ({
-        data: data.data,
-        user: data.user,
-      })),
       itemsData: itemsData.map((item) => ({
         name: item.name,
         description: item.description,
@@ -61,6 +61,7 @@ export async function getStaticProps() {
         party: item.party,
         thursday: item.thursday,
         id: item._id.toString(),
+        count:item.count,
       })),
     },
   };

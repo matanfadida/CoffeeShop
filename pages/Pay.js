@@ -1,7 +1,33 @@
 import { MongoClient } from "mongodb";
 import Cart from "../components/Cart/Cart";
+import { getSession } from "next-auth/react";
+import { useContext } from "react";
+import AuthContext from "../components/state/auth-context";
 
 const Pay = (props) => {
+
+  let count = 0;
+  const ctx = useContext(AuthContext);
+  if (ctx.isLoggedIn) {
+    getSession().then((session) => ctx.setUser(session.user.email));
+    const allOrderedOfUser = props.ordersData.filter(
+      (data) => data.user === ctx.getUser && data.vip === "yes"
+    );
+
+    const onlyCoffee = allOrderedOfUser.map((data) => data.data);
+
+    for (const i in onlyCoffee) {
+      for (const j in onlyCoffee) {
+        if (
+          onlyCoffee[i][j] !== undefined &&
+          onlyCoffee[i][j].category === "coffee"
+        ) {
+          count += +onlyCoffee[i][j].amount;
+        }
+      }
+    }
+  }
+
   return (
     <Cart
       ordersData={props.ordersData}
@@ -10,6 +36,7 @@ const Pay = (props) => {
       tablesData={props.tablesData}
       idTable={props.idTable}
       guest={props.guest}
+      countCoffee={count}
     />
   );
 };
@@ -44,6 +71,8 @@ export async function getStaticProps() {
       id: ordersData.map((data) => ({ id: data._id.toString() })),
       ordersData: ordersData.map((data) => ({
         data: data.data,
+        user: data.user,
+        vip: data.vip,
       })),
     },
   };

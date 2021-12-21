@@ -3,7 +3,7 @@ import ShowOrder from "./show-order";
 import Link from 'next/link';
 
 const Barista = (props) => {
-  // console.log(props._id[0].id);
+  // console.log(props.ordersData[0].vip)
 
   return (
     <div>
@@ -15,6 +15,8 @@ const Barista = (props) => {
               <label>total Amount: </label>
               {props.totalAmount[index].totalAmount}
               <br />
+              {`VIP: ${props.ordersData[index].vip}`}
+              <br/>
               <Link href={`/Baristas/${props._id[index].id}`}>Change the Order</Link>
             </Card>
           ))}

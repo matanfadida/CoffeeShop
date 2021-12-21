@@ -42,6 +42,7 @@ export async function getStaticProps() {
       id: ordersData.map((data) => ({ id: data._id.toString() })),
       ordersData: ordersData.map((data) => ({
         data: data.data,
+        vip: data.vip,
       })),
     },
   };

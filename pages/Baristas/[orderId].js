@@ -4,12 +4,13 @@ import { useContext, useEffect } from "react";
 import MenuClient from "../../components/Clients/MenuClient";
 import AuthContext from "../../components/state/auth-context";
 
-const S = (props) => {
+const BaristaChange = (props) => {
   const router = useRouter();
   const ctx = useContext(AuthContext);
   useEffect(() => {
     ctx.setOrderId(router.query.orderId);
     const user = props.ordersData.map(data => data.user)
+    console.log(user);
     ctx.setUser(user.toString());
     ctx.collectionChair(props.ordersData.map(data => data.chair))
     ctx.changeBaristasHandler();
@@ -29,7 +30,7 @@ const S = (props) => {
   return <MenuClient items={props.itemsData}/>;
 };
 
-export default S;
+export default BaristaChange;
 
 export async function getStaticPaths() {
   const client = await MongoClient.connect(

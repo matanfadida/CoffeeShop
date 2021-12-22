@@ -1,13 +1,8 @@
 import Card from "../UI/Card";
 import ShowOrder from "./show-order";
-import Link from 'next/link';
-import { useContext } from "react";
-import AuthContext from "../state/auth-context";
+import Link from "next/link";
 
 const Barista = (props) => {
-  const ctx = useContext(AuthContext);
-  ctx.baristaLoginHandler();
-  console.log(ctx.baristaLogin);
 
   return (
     <div>
@@ -20,8 +15,10 @@ const Barista = (props) => {
               {props.totalAmount[index].totalAmount}
               <br />
               {`VIP: ${props.ordersData[index].vip}`}
-              <br/>
-              <Link href={`/Baristas/${props._id[index].id}`}>Change the Order</Link>
+              <br />
+              <Link href={`/Baristas/${props._id[index].id}`}>
+                Change the Order
+              </Link>
             </Card>
           ))}
         </ul>

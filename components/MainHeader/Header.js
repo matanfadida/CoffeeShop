@@ -13,10 +13,10 @@ const Header = () => {
   }
   return (
     <header className={style.header}>
-      <h1>
+      <Link href="/"><h1>
         <FontAwesomeIcon icon={faCoffee} size="2x" />
         F&R Coffee
-      </h1>
+      </h1></Link>
       <HeaderCartButton />
       {ctx.isLoggedIn && <button className={style.button} onClick={loggoutHandler}>Loggout</button>}
       {!ctx.isLoggedIn && <Link href="/login"><button  className={style.button} >Login</button></Link>}

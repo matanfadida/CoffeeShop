@@ -1,6 +1,12 @@
 import { useRouter } from "next/router";
+import { useContext } from "react";
+import AuthContext from "./state/auth-context";
 
 const Welcome = (props) => {
+  const ctx = useContext(AuthContext);
+  if (ctx.isLoggedIn) {
+    ctx.logout();
+  }
   const router = useRouter();
 
   fetch("/api/auth/guest", {
@@ -10,23 +16,28 @@ const Welcome = (props) => {
       guest: (+props.guest[0] + 1).toString(),
     }),
     headers: { "Content-Type": "application/json" },
-  }).then(result => {
-    console.log(result);
-  });
+  }).then((result) => {});
 
   const clientHandler = () => {
     router.replace("/Menu");
+  };
+  const baristaHandler = () => {
+    ctx.baristaLoginHandler();
+    router.replace("/Baristas");
+  };
+  const adminHandler = () => {
+    router.replace("/admin/home");
   };
   return (
     <div>
       <h1>What Are You?</h1>
       <div>
         <label typy="text">Admin</label>
-        <button>Admin</button>
+        <button onClick={adminHandler}>Admin</button>
       </div>
       <div>
         <label type="text">Baristas</label>
-        <button>Baristas</button>
+        <button onClick={baristaHandler}>Baristas</button>
       </div>
       <div>
         <label type="text">Clients</label>

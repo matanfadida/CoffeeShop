@@ -60,37 +60,78 @@ const ChooesTable = (props) => {
     );
   }
 
+  const confrimHandler = async () => {
+    if (sit === "inside") {
+      table[0].inside[numTable][numChair] = numChair + 1;
+    } else {
+      table[0].outside[numTable][numChair] = numChair + 1;
+    }
+    await fetch("/api/items/table-data", {
+      method: "PUT",
+      body: JSON.stringify({
+        id: props.idTable,
+        table: { inside: table[0].inside, outside: table[0].outside },
+      }),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const response = await fetch("/api/items/ordered-data", {
+      method: "POST",
+      body: JSON.stringify({
+        chair: {
+          sit: chooesSit,
+          table: chooesTable,
+          chair: chooseChair,
+        },
+        totalAmount: props.totalAmount,
+        data: props.ordersData,
+        id: ctx.getOrderId,
+        user: ctx.getUser,
+        vip: vip,
+      }),
+      headers: { "Content-Type": "application/json" },
+    });
+    await fetch("/api/items/order-data", {
+      method: "DELETE",
+      body: JSON.stringify({
+        id: ctx.getOrderId,
+      }),
+      headers: { "Content-Type": "application/json" },
+    });
+
+  };
+
   const ChangeSitHandler = async () => {
     if (enteredChair === 0 && enteredTable === 0) {
       setError("input chair and table");
       return;
     }
-      if (enteredChair !== 0 && enteredTable !== 0) {
-        if (
-          (sit === "inside" &&
-            table[0].inside[enteredTable - 1][enteredChair - 1] === 0) ||
-          (sit === "outside" &&
-            table[0].outside[enteredTable - 1][enteredChair - 1] === 0)
-        ) {
-          setError("the chair occupied try other");
-          return;
-        }
-        if (sit === "inside") {
-          table[0].inside[enteredTable - 1][enteredChair - 1] = 0;
-          table[0].inside[numTable][numChair] = numChair + 1;
-        } else {
-          table[0].outside[enteredTable - 1][enteredChair - 1] = 0;
-          table[0].outside[numTable][numChair] = numChair + 1;
-        }
-        await fetch("/api/items/table-data", {
-          method: "PUT",
-          body: JSON.stringify({
-            id: props.idTable,
-            table: { inside: table[0].inside, outside: table[0].outside },
-          }),
-          headers: { "Content-Type": "application/json" },
-        });
+    if (enteredChair !== 0 && enteredTable !== 0) {
+      if (
+        (sit === "inside" &&
+          table[0].inside[enteredTable - 1][enteredChair - 1] === 0) ||
+        (sit === "outside" &&
+          table[0].outside[enteredTable - 1][enteredChair - 1] === 0)
+      ) {
+        setError("the chair occupied try other");
+        return;
       }
+      if (sit === "inside") {
+        table[0].inside[enteredTable - 1][enteredChair - 1] = 0;
+        table[0].inside[numTable][numChair] = numChair + 1;
+      } else {
+        table[0].outside[enteredTable - 1][enteredChair - 1] = 0;
+        table[0].outside[numTable][numChair] = numChair + 1;
+      }
+      await fetch("/api/items/table-data", {
+        method: "PUT",
+        body: JSON.stringify({
+          id: props.idTable,
+          table: { inside: table[0].inside, outside: table[0].outside },
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
+    }
     const response = await fetch("/api/items/order-data", {
       method: "PUT",
       body: JSON.stringify({
@@ -131,7 +172,7 @@ const ChooesTable = (props) => {
           )}
           <br />
           <label>open to sit</label>
-          <br/>
+          <br />
           {ShowTable}
         </Fragment>
       )}
@@ -140,16 +181,18 @@ const ChooesTable = (props) => {
       <br />
       <span>choose a Chair</span>
       <input type="number" onChange={enteredChairHandler} />
-      <br/>
-      <Link href='/Menu'><button>Menu</button></Link>
+      <br />
+      <Link href="/Menu">
+        <button>Menu</button>
+      </Link>
       {ctx.baristaLogin ? (
-        <button onClick={ChangeSitHandler}>confirm the order</button>
+        <button onClick={confrimHandler}>confirm the order</button>
       ) : (
         <button onClick={ChangeSitHandler}>change</button>
       )}
       {ctx.baristaLogin && (
         <>
-        <br/>
+          <br />
           <label>Vip?</label>
           <select name="vip" id="vip" onChange={selectVipHandler}>
             <option value="">Chooes</option>

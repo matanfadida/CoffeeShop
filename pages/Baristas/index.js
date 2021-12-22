@@ -2,6 +2,7 @@ import { MongoClient } from "mongodb";
 import Barista from "../../components/Baristas/Barista";
 
 const baristas = (props) => {
+
   return (
     <Barista
       ordersData={props.ordersData}

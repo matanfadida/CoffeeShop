@@ -9,7 +9,6 @@ const CartHe = () => {
         return number + item.amount;
       }, 0);
 
-    console.log(ctx.dynamicItems);
     return (
         <button
         //   onClick={ctx.onShowCart}

@@ -1,32 +1,7 @@
 import { MongoClient } from "mongodb";
-import { getSession } from "next-auth/react";
-import { useContext } from "react";
 import MenuClient from "../../components/Clients/MenuClient";
-import AuthContext from "../../components/state/auth-context";
 
 const Menu = (props) => {
-  // let count = 0;
-  // const ctx = useContext(AuthContext);
-  // if (ctx.isLoggedIn) {
-  //   getSession().then((session) => ctx.setUser(session.user.email));
-  //   const allOrderedOfUser = props.countCoffee.filter(
-  //     (data) => data.user === ctx.getUser && data.vip === "yes"
-  //   );
-
-  //   const onlyCoffee = allOrderedOfUser.map((data) => data.data);
-
-  //   for (const i in onlyCoffee) {
-  //     for (const j in onlyCoffee) {
-  //       if (
-  //         onlyCoffee[i][j] !== undefined &&
-  //         onlyCoffee[i][j].category === "coffee"
-  //       ) {
-  //         count += +onlyCoffee[i][j].amount;
-  //       }
-  //     }
-  //   }
-  // }
-
   return <MenuClient items={props.itemsData} />;
 };
 

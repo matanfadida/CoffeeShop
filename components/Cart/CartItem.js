@@ -1,12 +1,12 @@
-import classes from './CartItem.module.css';
+import classes from "./CartItem.module.css";
+import { useRouter } from "next/router";
 
 const CartItem = (props) => {
-//   const price = `$${props.price.toFixed(2)}`;
-    const price = props.price;
-    
+  const router = useRouter();
+  const price = props.price;
 
   return (
-    <li className={classes['cart-item']}>
+    <li className={classes["cart-item"]}>
       <div>
         <h2>{props.name}</h2>
         <div className={classes.summary}>
@@ -14,10 +14,10 @@ const CartItem = (props) => {
           <span className={classes.amount}>x {props.amount}</span>
         </div>
       </div>
-      <div className={classes.actions}>
+      {router.pathname !== "/Baristas" &&<div className={classes.actions}>
         <button onClick={props.onRemove}>−</button>
         <button onClick={props.onAdd}>+</button>
-      </div>
+      </div>}
     </li>
   );
 };

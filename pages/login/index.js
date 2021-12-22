@@ -1,7 +1,7 @@
-import LoginAdmin from "../../components/Admin/loginAdmin";
+import LoginClient from "../../components/Clients/LoginClient";
 
-export default function LoginPage() {
+export default function LoginAdminPage() {
   return (
-    <LoginAdmin/>
+    <LoginClient/>
   )
 }

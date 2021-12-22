@@ -18,6 +18,7 @@ const Cart = (props) => {
   const [vip, setVip] = useState("");
   const [enteredTable, setEnteredTable] = useState(0);
   const [enteredChair, setEnteredChair] = useState(0);
+  const [error, setError] = useState(null);
   const table = props.tablesData;
   const current = new Date();
 
@@ -55,8 +56,12 @@ const Cart = (props) => {
     }
   }
 
-  const cartIteamAddHandler = (item) => {};
-  const cartIteamRemoveHandler = (id) => {};
+  const cartIteamAddHandler = (item) => {
+    ctx.addItemToCartHandler({...item,amount:1})
+  };
+  const cartIteamRemoveHandler = (id) => {
+    ctx.removeItemFromCartHandler(id);
+  };
 
   const BackBuyHandler = () => {
     router.push("/Menu");
@@ -97,13 +102,17 @@ const Cart = (props) => {
   }
 
   const OrderHandler = async () => {
+    if(enteredChair === 0 && enteredTable === 0){
+      setError("input chair and table")
+      return;
+    }
     if (
       (sit === "inside" &&
         table[0].inside[enteredTable - 1][enteredChair - 1] === 0) ||
       (sit === "outside" &&
         table[0].outside[enteredTable - 1][enteredChair - 1] === 0)
     ) {
-      console.log("the chair occupied try other");
+      setError("the chair occupied try other");
       return;
     }
     setSendReq(true);
@@ -196,7 +205,7 @@ const Cart = (props) => {
         <span>{totalAmount}</span>
       </div>
       <div>
-        {!ctx.baristaChange && <button onClick={BackBuyHandler}>Close</button>}
+        {!ctx.baristaChange && <button onClick={BackBuyHandler}>Back Menu</button>}
         {ctx.baristaChange && (
           <ChooesTable
             ordersData={ctx.dynamicItems}
@@ -244,6 +253,7 @@ const Cart = (props) => {
                 <span>choose a Chair</span>
                 <input type="number" onChange={enteredChairHandler} />
                 <br />
+                {error && <p>{error}</p>}
                 {ctx.isLoggedIn && (
                   <>
                     <label>Vip?</label>

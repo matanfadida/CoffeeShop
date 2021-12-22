@@ -1,13 +1,15 @@
 import { Fragment, useContext, useState } from "react";
 import AuthContext from "../state/auth-context";
 import Table from "./Table";
+import Link from "next/link";
 
 const ChooesTable = (props) => {
   const table = props.tablesData;
   const ctx = useContext(AuthContext);
   const [enteredTable, setEnteredTable] = useState(0);
   const [enteredChair, setEnteredChair] = useState(0);
-  const [vip, setVip] = useState('');
+  const [error, setError] = useState(null);
+  const [vip, setVip] = useState("");
   const [sit, setSit] = useState("");
   const current = new Date();
   let outsideAvailability = false;
@@ -59,7 +61,10 @@ const ChooesTable = (props) => {
   }
 
   const ChangeSitHandler = async () => {
-    if (enteredChair !== "" && enteredTable !== "") {
+    if (enteredChair === 0 && enteredTable === 0) {
+      setError("input chair and table");
+      return;
+    }
       if (enteredChair !== 0 && enteredTable !== 0) {
         if (
           (sit === "inside" &&
@@ -67,7 +72,7 @@ const ChooesTable = (props) => {
           (sit === "outside" &&
             table[0].outside[enteredTable - 1][enteredChair - 1] === 0)
         ) {
-          console.log("the chair occupied try other");
+          setError("the chair occupied try other");
           return;
         }
         if (sit === "inside") {
@@ -86,8 +91,6 @@ const ChooesTable = (props) => {
           headers: { "Content-Type": "application/json" },
         });
       }
-    }
-    console.log(ctx.getOrderId);
     const response = await fetch("/api/items/order-data", {
       method: "PUT",
       body: JSON.stringify({
@@ -100,7 +103,7 @@ const ChooesTable = (props) => {
         data: props.ordersData,
         id: ctx.getOrderId,
         user: ctx.getUser,
-        vip:vip,
+        vip: vip,
       }),
       headers: { "Content-Type": "application/json" },
     });
@@ -111,7 +114,6 @@ const ChooesTable = (props) => {
       <p>place:{chooesSit}</p>
       <p>table:{numTable + 1}</p>
       <p>chair:{numChair + 1}</p>
-      <br />
       <br />
       {!ctx.ordered && (
         <Fragment>
@@ -129,25 +131,34 @@ const ChooesTable = (props) => {
           )}
           <br />
           <label>open to sit</label>
+          <br/>
           {ShowTable}
         </Fragment>
       )}
-      <br />
-      <br />
       <span>choose a table</span>
       <input type="number" onChange={enteredTableHandler} />
       <br />
       <span>choose a Chair</span>
       <input type="number" onChange={enteredChairHandler} />
-      <button onClick={ChangeSitHandler}>confirm the order</button>
-      <>
-        <label>Vip?</label>
-        <select name="vip" id="vip" onChange={selectVipHandler}>
-          <option value="">Chooes</option>
-          <option value="no">No</option>
-          <option value="yes">yes</option>
-        </select>
-      </>
+      <br/>
+      <Link href='/Menu'><button>Menu</button></Link>
+      {ctx.baristaLogin ? (
+        <button onClick={ChangeSitHandler}>confirm the order</button>
+      ) : (
+        <button onClick={ChangeSitHandler}>change</button>
+      )}
+      {ctx.baristaLogin && (
+        <>
+        <br/>
+          <label>Vip?</label>
+          <select name="vip" id="vip" onChange={selectVipHandler}>
+            <option value="">Chooes</option>
+            <option value="no">No</option>
+            <option value="yes">yes</option>
+          </select>
+        </>
+      )}
+      {error && <p>{error}</p>}
     </Fragment>
   );
 };

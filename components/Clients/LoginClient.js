@@ -1,14 +1,16 @@
 import { useContext, useState } from "react";
 import AuthContext from "../state/auth-context";
 import Card from "../UI/Card";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 
-import style from "./LoginAdmin.module.css";
+import style from "../Admin/Login.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-const LoginAdmin = () => {
+const LoginClient = () => {
   const ctx = useContext(AuthContext);
+  const router = useRouter();
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
 
@@ -23,6 +25,7 @@ const LoginAdmin = () => {
       //asd
     }
     console.log(result);
+    router.replace('/Menu');
   };
 
   const enteredEmailHandler = (event) => {
@@ -63,4 +66,4 @@ const LoginAdmin = () => {
   );
 };
 
-export default LoginAdmin;
+export default LoginClient;

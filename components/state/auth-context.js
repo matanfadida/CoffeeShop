@@ -10,6 +10,8 @@ const AuthContext = React.createContext({
   ordered: false,
   baristaChange: false,
   place: {},
+  baristaLoginHandler: () => {},
+  baristaLogin: false,
   changeBaristasHandler: () => {},
   collectionChair: (place) => {},
   addItemToCartHandler: (item) => {},
@@ -95,6 +97,7 @@ export const AuthContextProvider = (props) => {
   const [getOrderId, setOrderId] = useState("");
   const [getUser, setUser] = useState("");
   const [baristaChange, setBaristaChange] = useState(false);
+  const [baristaLogin, setBaristaLogin] = useState(false);
   const [cartStateReduce, dispatchCartState] = useReducer(
     cartReducer,
     defaultState
@@ -119,6 +122,10 @@ export const AuthContextProvider = (props) => {
 
   const changeBaristasHandler = () => {
     setBaristaChange(true);
+  };
+
+  const baristaLoginHandler = () => {
+    setBaristaLogin(true);
   };
 
   const collectionChair = (place) => {
@@ -182,6 +189,8 @@ export const AuthContextProvider = (props) => {
     baristaChange,
     collectionChair,
     place,
+    baristaLogin,
+    baristaLoginHandler,
     changeBaristasHandler,
     addItemToCartHandler,
     removeItemFromCartHandler,

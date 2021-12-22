@@ -1,9 +1,13 @@
 import Card from "../UI/Card";
 import ShowOrder from "./show-order";
 import Link from 'next/link';
+import { useContext } from "react";
+import AuthContext from "../state/auth-context";
 
 const Barista = (props) => {
-  // console.log(props.ordersData[0].vip)
+  const ctx = useContext(AuthContext);
+  ctx.baristaLoginHandler();
+  console.log(ctx.baristaLogin);
 
   return (
     <div>

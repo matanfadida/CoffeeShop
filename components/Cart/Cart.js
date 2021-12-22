@@ -28,34 +28,30 @@ const Cart = (props) => {
     outsideAvailability = true;
   }
 
+  console.log(emailUser);
+
   getSession().then(async (session) => {
     if (session) {
       emailUser = session.user.email;
-    } else {
-      await fetch("/api/auth/guest", {
-        method: "PUT",
-        body: JSON.stringify({
-          id: "61c05ee22b74d3d1e9998dc9",
-          guest: (+props.guest[0] + 1).toString(),
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
     }
   });
 
   let totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
 
-  if(ctx.baristaChange){
-
+  if (ctx.baristaChange) {
     let totalAmount;
-  
-    if(+props.countCoffee === 10 && ctx.dynamicItems.map(item => item.category).includes('coffee')){
-      // alert("you have free coffe")
-      const coffee = (ctx.dynamicItems.filter(item => item.category === 'coffee'));
-      totalAmount = +ctx.totalAmount - (+coffee[0].price);
-      totalAmount = `$${totalAmount.toFixed(2)}`
-    }else{
-      totalAmount = `$${ctx.totalAmount.toFixed(2)}`
+
+    if (
+      +props.countCoffee === 10 &&
+      ctx.dynamicItems.map((item) => item.category).includes("coffee")
+    ) {
+      const coffee = ctx.dynamicItems.filter(
+        (item) => item.category === "coffee"
+      );
+      totalAmount = +ctx.totalAmount - +coffee[0].price;
+      totalAmount = `$${totalAmount.toFixed(2)}`;
+    } else {
+      totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
     }
   }
 

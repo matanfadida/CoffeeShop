@@ -3,10 +3,12 @@ import { getSession } from "next-auth/react";
 import { Fragment, useContext, useEffect, useState } from "react";
 import ShowItems from "../Menu/ShowItems";
 import AuthContext from "../state/auth-context";
-import { MaxKey } from "bson";
+import { useRouter } from "next/router";
+
 
 const Menu = (props) => {
   const ctx = useContext(AuthContext);
+  const router = useRouter();
   const [itemsFilter, setItemsFilter] = useState(props.items);
   const [party, setParty] = useState("");
   const [Thursday, setThursday] = useState(false);
@@ -15,7 +17,6 @@ const Menu = (props) => {
     current.getMonth() + 1
   }-${current.getDate()}`;
 
-  console.log(props.count);
   let ShowLunch =
     current.getHours() <= 17 &&
     current.getHours() >= 14 &&
@@ -66,7 +67,6 @@ const Menu = (props) => {
     if (filterKey === "most popular") {
       var maxItem = Math.max(...props.items.map((item) => item.count));
       const filterItem = props.items.filter((item) => item.count === maxItem );
-      console.log(filterItem);
       return filterItem;
     }
   };
@@ -81,7 +81,7 @@ const Menu = (props) => {
     //   setItemsFilter(props.items);
     // }
     
-    if(ctx.isLoggedIn){
+    if(ctx.isLoggedIn || router.pathname.includes('/Baristas') ){
       const session = await getSession();
         if(session){
           const age = +session.user.age;
@@ -96,6 +96,17 @@ const Menu = (props) => {
               headers: { "Content-Type": "application/json" },
             });
           }
+        }
+        else if(router.pathname.includes('/Baristas')) {
+          await fetch("/api/items/data", {
+            method: "PUT",
+            body: JSON.stringify({
+              age: 19,
+              availability: props.availability,
+              category: props.category,
+            }),
+            headers: { "Content-Type": "application/json" },
+          });
         }
     }
     else{
@@ -135,7 +146,6 @@ const Menu = (props) => {
   };
 
   const sortPriceHandler = (event) => {
-    console.log(props.items);
     if (event.target.value === "all") {
       setItemsFilter(props.items);
     } else {

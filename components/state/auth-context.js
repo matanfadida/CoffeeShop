@@ -20,8 +20,6 @@ const AuthContext = React.createContext({
   totalAmount: 0,
   error: "",
   isLoggedIn: false,
-  token: "",
-  login: (token) => {},
   logout: () => {},
   filterItems: (event) => {},
 });
@@ -92,7 +90,6 @@ const cartReducer = (state, action) => {
 
 export const AuthContextProvider = (props) => {
   const [Loading, setLoading] = useState(false);
-  const [token, setToken] = useState(null);
   const [ordered, setOrdered] = useState(false);
   const [place, setPlace] = useState({});
   const [getOrderId, setOrderId] = useState("");
@@ -111,12 +108,9 @@ export const AuthContextProvider = (props) => {
 
   let error_;
 
-  const isLoginHandler = (token) => {
-    setToken(token);
-  };
-
   const isLogoutHanlder = () => {
     signOut();
+    userIsLoggedIn = false;
   };
 
   const changeOrdersHandler = () => {
@@ -198,8 +192,6 @@ export const AuthContextProvider = (props) => {
     Loading,
     isLoggedIn: userIsLoggedIn,
     error: error_,
-    token: token,
-    login: isLoginHandler,
     logout: isLogoutHanlder,
   };
 

@@ -1,8 +1,10 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import Link from "next/link";
 import Card from "../UI/Card";
+import AuthContext from "../state/auth-context";
 
 const Admin = () => {
+  const ctx = useContext(AuthContext);
   const enterNumSitRef = useRef();
   const enterTableInsideRef = useRef();
   const enterTableOutsideRef = useRef();
@@ -48,6 +50,7 @@ const Admin = () => {
     <Card>
       <form onSubmit={changeSubmitHandler}>
         <h1>Option Admin</h1>
+        <h2>{`Welcome ${ctx.getAdminName}`}</h2>
         <label>sitting table inside</label>
         <br/>
         <input type="number" ref={enterTableInsideRef} />

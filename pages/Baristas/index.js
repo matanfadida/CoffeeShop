@@ -1,17 +1,22 @@
 import { MongoClient } from "mongodb";
+import { Fragment, useContext } from "react";
 import Barista from "../../components/Baristas/Barista";
+import AuthContext from "../../components/state/auth-context";
 
 const baristas = (props) => {
-
+  const ctx = useContext(AuthContext);
   return (
-    <Barista
-      ordersData={props.ordersData}
-      _id={props.id}
-      totalAmount={props.totalAmount}
-      place={props.place}
-      tablesData={props.tablesData}
-      idTable={props.idTable}
-    />
+    <Fragment>
+      <h1> Hi {ctx.getBaristaName}</h1>
+      <Barista
+        ordersData={props.ordersData}
+        _id={props.id}
+        totalAmount={props.totalAmount}
+        place={props.place}
+        tablesData={props.tablesData}
+        idTable={props.idTable}
+      />
+    </Fragment>
   );
 };
 
@@ -35,8 +40,8 @@ export async function getStaticProps() {
   return {
     props: {
       idTable: tablesData[0]._id.toString(),
-      tablesData: tablesData.map(table => table.table),
-      place: ordersData.map((data) => (data.chair )),
+      tablesData: tablesData.map((table) => table.table),
+      place: ordersData.map((data) => data.chair),
       totalAmount: ordersData.map((data) => ({
         totalAmount: data.totalAmount,
       })),

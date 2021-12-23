@@ -9,21 +9,19 @@ const Welcome = (props) => {
   }
   const router = useRouter();
 
-  fetch("/api/auth/guest", {
-    method: "PUT",
-    body: JSON.stringify({
-      id: "61c05ee22b74d3d1e9998dc9",
-      guest: (+props.guest[0] + 1).toString(),
-    }),
-    headers: { "Content-Type": "application/json" },
-  }).then((result) => {});
-
   const clientHandler = () => {
+    fetch("/api/auth/guest", {
+      method: "PUT",
+      body: JSON.stringify({
+        id: "61c05ee22b74d3d1e9998dc9",
+        guest: (+props.guest[0] + 1).toString(),
+      }),
+      headers: { "Content-Type": "application/json" },
+    }).then((result) => {});
     router.replace("/Menu");
   };
   const baristaHandler = () => {
-    ctx.baristaLoginHandler();
-    router.replace("/Baristas");
+    router.replace("/Baristas/login");
   };
   const adminHandler = () => {
     router.replace("/admin/home");

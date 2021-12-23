@@ -10,7 +10,13 @@ const AuthContext = React.createContext({
   ordered: false,
   baristaChange: false,
   place: {},
+  getBaristaName: "",
+  baristaName: (name) => {},
+  getAdminName: "",
+  adminName: (name) => {},
+  adminLogin:false,
   baristaLoginHandler: () => {},
+  adminLoginHandler: () => {},
   baristaLogin: false,
   changeBaristasHandler: () => {},
   collectionChair: (place) => {},
@@ -96,8 +102,11 @@ export const AuthContextProvider = (props) => {
   const [place, setPlace] = useState({});
   const [getOrderId, setOrderId] = useState("");
   const [getUser, setUser] = useState("");
+  const [getBaristaName, setBaristaName] = useState("");
+  const [getAdminName, setAdminName] = useState("");
   const [baristaChange, setBaristaChange] = useState(false);
   const [baristaLogin, setBaristaLogin] = useState(false);
+  const [adminLogin, setAdminLogin] = useState(false);
   const [cartStateReduce, dispatchCartState] = useReducer(
     cartReducer,
     defaultState
@@ -126,6 +135,18 @@ export const AuthContextProvider = (props) => {
 
   const baristaLoginHandler = () => {
     setBaristaLogin(true);
+  };
+
+  const adminLoginHandler = () => {
+    setAdminLogin(true);
+  };
+
+  const baristaName = (name) => {
+    setBaristaName(name);
+  };
+
+  const adminName = (name) => {
+    setAdminName(name);
   };
 
   const collectionChair = (place) => {
@@ -189,6 +210,12 @@ export const AuthContextProvider = (props) => {
     baristaChange,
     collectionChair,
     place,
+    getBaristaName,
+    baristaName,
+    getAdminName,
+    adminName,
+    adminLoginHandler,
+    adminLogin,
     baristaLogin,
     baristaLoginHandler,
     changeBaristasHandler,

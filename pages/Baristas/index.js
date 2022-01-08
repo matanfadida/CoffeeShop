@@ -5,6 +5,7 @@ import AuthContext from "../../components/state/auth-context";
 
 const baristas = (props) => {
   const ctx = useContext(AuthContext);
+  ctx.cleanItemHandler();
   return (
     <Fragment>
       <h1> Hi {ctx.getBaristaName}</h1>

@@ -4,7 +4,7 @@ import Card from "../UI/Card";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 
-import style from "../Admin/Login.module.css";
+import style from "./Login.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 

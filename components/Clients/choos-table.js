@@ -1,9 +1,11 @@
 import { Fragment, useContext, useState } from "react";
 import AuthContext from "../state/auth-context";
 import Table from "./Table";
-import Link from "next/link";
+// import Link from "next/link";
+import { useRouter } from "next/router";
 
 const ChooesTable = (props) => {
+  const router = useRouter();
   const table = props.tablesData;
   const ctx = useContext(AuthContext);
   const [enteredTable, setEnteredTable] = useState(0);
@@ -103,6 +105,7 @@ const ChooesTable = (props) => {
       }),
       headers: { "Content-Type": "application/json" },
     });
+    router.push('/Baristas');
   };
 
   const ChangeSitHandler = async () => {
@@ -186,17 +189,16 @@ const ChooesTable = (props) => {
       <span>choose a Chair</span>
       <input type="number" onChange={enteredChairHandler} />
       <br />
-      <Link href="/Menu">
-        <button>Menu</button>
-      </Link>
+      {/* <Link href="/Menu"> */}
+        <button onClick={() => {router.back()}}>Menu</button>
       {ctx.baristaLogin && <button onClick={cardDetailHandler}>Add Card Detail</button>}
       {(ctx.baristaLogin && cardDetail) && (
-        <form class="credit-card">
-          <div class="form-header">
-            <h4 class="title">Credit card detail</h4>
+        <form>
+          <div>
+            <h4>Credit card detail</h4>
           </div>
 
-          <div class="form-body">
+          <div>
             {/* <!-- Card Number --> */}
             <input
               id="ccn"
@@ -209,8 +211,8 @@ const ChooesTable = (props) => {
             />
 
             {/* <!-- Date Field --> */}
-            <div class="date-field">
-              <div class="month">
+            <div>
+              <div>
                 <select name="Month">
                   <option value="january">January</option>
                   <option value="february">February</option>
@@ -226,7 +228,7 @@ const ChooesTable = (props) => {
                   <option value="december">December</option>
                 </select>
               </div>
-              <div class="year">
+              <div>
                 <select name="Year">
                   <option value="2016">2016</option>
                   <option value="2017">2017</option>
@@ -241,11 +243,11 @@ const ChooesTable = (props) => {
               </div>
             </div>
 
-            <div class="card-verification">
-              <div class="cvv-input">
+            <div>
+              <div>
                 <input type="text" placeholder="CVV" />
               </div>
-              <div class="cvv-details">
+              <div>
                 <p>
                   3 or 4 digits usually found <br /> on the signature strip
                 </p>

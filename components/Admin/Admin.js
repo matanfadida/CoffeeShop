@@ -65,6 +65,8 @@ const Admin = () => {
         <button>Change</button>
       </form>
       <Link href="/additems">to add items</Link>
+      <br/>
+      <Link href="/admin/Menu">Menu admin</Link>
     </Card>
   );
 };

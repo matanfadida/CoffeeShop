@@ -9,8 +9,7 @@ const ShowItems = (props) => {
   const newPriceInputRef = useRef();
   const router = useRouter();
   const ctx = useContext(AuthContext);
-  const AdminLogin = router.pathname === "/adminlogin/Menu";
-  const BaristLogin = router.pathname === "/Baristas/[orderId]";
+  const AdminLogin = router.pathname === "/admin/Menu";
   const current = new Date();
   const date = `${current.getDate()}/${
     current.getMonth() + 1

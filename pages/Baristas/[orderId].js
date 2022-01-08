@@ -8,6 +8,7 @@ const BaristaChange = (props) => {
   const router = useRouter();
   const ctx = useContext(AuthContext);
   useEffect(() => {
+    ctx.cleanItemHandler();
     ctx.setOrderId(router.query.orderId);
     const user = props.ordersData.map(data => data.user)
     console.log(user);

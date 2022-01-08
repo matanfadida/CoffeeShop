@@ -10,7 +10,7 @@ const Pay = (props) => {
   const ctx = useContext(AuthContext);
   if (ctx.isLoggedIn) {
     getSession().then((session) => ctx.setUser(session.user.email));
-    const allOrderedOfUser = props.ordersData.filter(
+    const allOrderedOfUser = props.orderedsData.filter(
       (data) => data.user === ctx.getUser && data.vip === "yes"
     );
 
@@ -49,8 +49,12 @@ export async function getStaticProps() {
   const db = client.db();
 
   const resultOrders = db.collection("orders");
-
+  
   const ordersData = await resultOrders.find().toArray();
+  
+  const resultOrdereds = db.collection("ordered");
+  
+  const orderedsData = await resultOrdereds.find().toArray();
 
   const resultTables = db.collection("tables");
 
@@ -70,6 +74,12 @@ export async function getStaticProps() {
       })),
       id: ordersData.map((data) => ({ id: data._id.toString() })),
       ordersData: ordersData.map((data) => ({
+        data: data.data,
+        user: data.user,
+        vip: data.vip,
+      })),
+      id_: orderedsData.map((data) => ({ id: data._id.toString() })),
+      orderedsData: orderedsData.map((data) => ({
         data: data.data,
         user: data.user,
         vip: data.vip,

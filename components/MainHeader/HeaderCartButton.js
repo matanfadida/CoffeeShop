@@ -39,6 +39,7 @@ const HeaderCartButton = () => {
       </span>
       <span>Your Cart</span>
       <span className={styles.badge}>{countOrder}</span>
+      <span className={styles.badge}>{`${ctx.totalAmount}$`}</span>
     </button>
   );
 };

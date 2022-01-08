@@ -17,7 +17,10 @@ const AuthContext = React.createContext({
   adminLogin:false,
   baristaLoginHandler: () => {},
   adminLoginHandler: () => {},
+  baristaLogoutHandler: () => {},
+  adminLogoutHandler: () => {},
   baristaLogin: false,
+  cleanItemHandler: () => {},
   changeBaristasHandler: () => {},
   collectionChair: (place) => {},
   addItemToCartHandler: (item) => {},
@@ -141,6 +144,14 @@ export const AuthContextProvider = (props) => {
     setAdminLogin(true);
   };
 
+  const baristaLogoutHandler = () => {
+    setBaristaLogin(false);
+    setBaristaChange(false);
+  }
+  const adminLogoutHandler = () => {
+    setAdminLogin(false);
+  }
+
   const baristaName = (name) => {
     setBaristaName(name);
   };
@@ -218,6 +229,8 @@ export const AuthContextProvider = (props) => {
     adminLogin,
     baristaLogin,
     baristaLoginHandler,
+    adminLogoutHandler,
+    baristaLogoutHandler,
     changeBaristasHandler,
     addItemToCartHandler,
     removeItemFromCartHandler,

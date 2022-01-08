@@ -4,7 +4,7 @@ import AuthContext from "../state/auth-context";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import style from "../Admin/LoginAdmin.module.css";
+import style from "./Login.module.css";
 
 const Register = () => {
   const ctx = useContext(AuthContext);

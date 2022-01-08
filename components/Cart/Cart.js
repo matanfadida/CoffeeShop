@@ -21,6 +21,7 @@ const Cart = (props) => {
   const [error, setError] = useState(null);
   const table = props.tablesData;
   const current = new Date();
+  console.log(props.countCoffee);
 
   let place = null;
   let emailUser = props.guest[0].toString();
@@ -28,7 +29,6 @@ const Cart = (props) => {
   if (current.getDay() !== 1) {
     outsideAvailability = true;
   }
-
   console.log(emailUser);
 
   getSession().then(async (session) => {
@@ -39,11 +39,12 @@ const Cart = (props) => {
 
   let totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
 
-  if (ctx.baristaChange) {
-    let totalAmount;
+  console.log(+props.countCoffee % 10);
+  // if (ctx.baristaChange) {
+    // let totalAmount;
 
     if (
-      +props.countCoffee === 10 &&
+      +props.countCoffee % 10 == 0 &&
       ctx.dynamicItems.map((item) => item.category).includes("coffee")
     ) {
       const coffee = ctx.dynamicItems.filter(
@@ -54,7 +55,7 @@ const Cart = (props) => {
     } else {
       totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
     }
-  }
+  // }
 
   const cartIteamAddHandler = (item) => {
     ctx.addItemToCartHandler({...item,amount:1})

@@ -13,9 +13,7 @@ const Menu = (props) => {
   const [party, setParty] = useState("");
   const [Thursday, setThursday] = useState(false);
   const current = new Date();
-  const tody = `${current.getFullYear()}-${
-    current.getMonth() + 1
-  }-${current.getDate()}`;
+  const today = current.toISOString().split('T')[0];
 
   let ShowLunch =
     current.getHours() <= 17 &&
@@ -61,7 +59,7 @@ const Menu = (props) => {
       return filterItem;
     }
     if (filterKey === "the day") {
-      const filterItem = [props.items[current.getDay()]];
+      const filterItem = [props.items[Math.floor(Math.random() * props.items.length)]];
       return filterItem;
     }
     if (filterKey === "most popular") {
@@ -72,14 +70,14 @@ const Menu = (props) => {
   };
 
   useEffect(async() => {
-    // if (current.getDay() === 4) {
-    //   setThursday(true);
-    //   setItemsFilter(filterItems(current.getDay(), "thursday"))
-    // }
-    // else{
-    //   setThursday(false);
-    //   setItemsFilter(props.items);
-    // }
+    if (current.getDay() === 4) {
+      setThursday(true);
+      setItemsFilter(filterItems(current.getDay(), "thursday"))
+    }
+    else{
+      setThursday(false);
+      setItemsFilter(props.items);
+    }
     
     if(ctx.isLoggedIn || router.pathname.includes('/Baristas') ){
       const session = await getSession();
@@ -229,7 +227,7 @@ const Menu = (props) => {
         type="date"
         id="date"
         name="date"
-        defaultValue={tody}
+        defaultValue={today}
         onChange={dateSelectHandler}
       />
 

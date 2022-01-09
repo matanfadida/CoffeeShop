@@ -23,6 +23,7 @@ const Cart = (props) => {
   const current = new Date();
   console.log(props.countCoffee);
 
+  let tenCoffee = false;
   let place = null;
   let emailUser = props.guest[0].toString();
   let outsideAvailability = false;
@@ -39,12 +40,9 @@ const Cart = (props) => {
 
   let totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
 
-  console.log(+props.countCoffee % 10);
-  // if (ctx.baristaChange) {
-    // let totalAmount;
 
     if (
-      +props.countCoffee % 10 == 0 &&
+      +props.countCoffee <= 10 &&
       ctx.dynamicItems.map((item) => item.category).includes("coffee")
     ) {
       const coffee = ctx.dynamicItems.filter(
@@ -52,10 +50,10 @@ const Cart = (props) => {
       );
       totalAmount = +ctx.totalAmount - +coffee[0].price;
       totalAmount = `$${totalAmount.toFixed(2)}`;
+      tenCoffee = true;
     } else {
       totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
     }
-  // }
 
   const cartIteamAddHandler = (item) => {
     ctx.addItemToCartHandler({...item,amount:1})
@@ -166,6 +164,17 @@ const Cart = (props) => {
           headers: { "Content-Type": "application/json" },
         })
     );
+
+    if(tenCoffee){
+      await fetch("/api/items/ordered-data", {
+        method: "DELETE",
+        body: JSON.stringify({
+          email: emailUser,
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     setSendReq(false);
     ctx.changeOrdersHandler();
     router.push("/Menu");

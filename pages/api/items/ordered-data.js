@@ -13,6 +13,10 @@ async function handlerOrdered(req, res) {
     const result = await db.collection("ordered").insertOne(data);
   }
 
+  if (req.method === "DELETE") {
+    await db.collection('ordered').deleteMany({ user: data.email });
+  }
+
   res.status(201).json({ message: "Ordered successfully !" });
   client.close();
 }

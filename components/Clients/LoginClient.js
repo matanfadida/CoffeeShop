@@ -13,9 +13,11 @@ const LoginClient = () => {
   const router = useRouter();
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const onSubmitHandlerLogin = async (event) => {
     event.preventDefault();
+    setLoading(true);
     const result = await signIn("credentials", {
       redirect: false,
       email: enteredEmail,
@@ -24,8 +26,9 @@ const LoginClient = () => {
     if (!result.error) {
       //asd
     }
-    console.log(result);
-    router.replace('/Menu');
+    setLoading(false);
+    // console.log(result);
+    router.replace("/Menu");
   };
 
   const enteredEmailHandler = (event) => {
@@ -35,6 +38,16 @@ const LoginClient = () => {
   const enteredPasswordHandler = (event) => {
     setEnteredPassword(event.target.value);
   };
+
+  if (loading) {
+    return (
+      <Card>
+        <FontAwesomeIcon icon={faSpinner} size="2x" spin={true} />
+        <p>Loading..</p>
+      </Card>
+    );
+  }
+
   return (
     <Card ClassName={style.form}>
       <form onSubmit={onSubmitHandlerLogin}>
@@ -54,11 +67,7 @@ const LoginClient = () => {
           </div>
 
           <div className={style.actions}>
-            {ctx.Loading ? (
-              <FontAwesomeIcon icon={faSpinner} size="2x" spin={true} />
-            ) : (
-              <button type="submit">Login</button>
-            )}
+            <button type="submit">Login</button>
           </div>
         </div>
       </form>

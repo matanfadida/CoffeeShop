@@ -14,49 +14,61 @@ const Cart = (props) => {
   const ctx = useContext(AuthContext);
   const router = useRouter();
   const [sendReq, setSendReq] = useState(false);
+  const [emailUser, setEmailUser] = useState("");
   const [sit, setSit] = useState("");
   const [vip, setVip] = useState("");
   const [enteredTable, setEnteredTable] = useState(0);
   const [enteredChair, setEnteredChair] = useState(0);
   const [error, setError] = useState(null);
   const table = props.tablesData;
+  let countCoffee = 0;
   const current = new Date();
-  console.log(props.countCoffee);
 
   let tenCoffee = false;
   let place = null;
-  let emailUser = props.guest[0].toString();
   let outsideAvailability = false;
   if (current.getDay() !== 1) {
     outsideAvailability = true;
   }
-  console.log(emailUser);
 
   getSession().then(async (session) => {
     if (session) {
-      emailUser = session.user.email;
+      setEmailUser(session.user.email);
+    } else {
+      setEmailUser(props.guest[0].toString());
     }
   });
 
+  if (ctx.isLoggedIn) {
+    const user = props.usersData.filter((email) => email.email === emailUser);
+    if (user[0]) {
+      countCoffee = countCoffee + +user[0].count;
+      for (const i in ctx.dynamicItems) {
+        if (ctx.dynamicItems[i].category === "coffee") {
+          countCoffee = countCoffee + +ctx.dynamicItems[i].amount;
+        }
+      }
+    }
+  }
+
   let totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
 
-
-    if (
-      +props.countCoffee <= 10 &&
-      ctx.dynamicItems.map((item) => item.category).includes("coffee")
-    ) {
-      const coffee = ctx.dynamicItems.filter(
-        (item) => item.category === "coffee"
-      );
-      totalAmount = +ctx.totalAmount - +coffee[0].price;
-      totalAmount = `$${totalAmount.toFixed(2)}`;
-      tenCoffee = true;
-    } else {
-      totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
-    }
+  if (
+    countCoffee >= 10 &&
+    ctx.dynamicItems.map((item) => item.category).includes("coffee")
+  ) {
+    const coffee = ctx.dynamicItems.filter(
+      (item) => item.category === "coffee"
+    );
+    totalAmount = +ctx.totalAmount - +coffee[0].price;
+    totalAmount = `$${totalAmount.toFixed(2)}`;
+    tenCoffee = true;
+  } else {
+    totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
+  }
 
   const cartIteamAddHandler = (item) => {
-    ctx.addItemToCartHandler({...item,amount:1})
+    ctx.addItemToCartHandler({ ...item, amount: 1 });
   };
   const cartIteamRemoveHandler = (id) => {
     ctx.removeItemFromCartHandler(id);
@@ -101,8 +113,8 @@ const Cart = (props) => {
   }
 
   const OrderHandler = async () => {
-    if(enteredChair === 0 && enteredTable === 0){
-      setError("input chair and table")
+    if (enteredChair === 0 && enteredTable === 0) {
+      setError("input chair and table");
       return;
     }
     if (
@@ -164,17 +176,26 @@ const Cart = (props) => {
           headers: { "Content-Type": "application/json" },
         })
     );
-
-    if(tenCoffee){
-      await fetch("/api/items/ordered-data", {
-        method: "DELETE",
+    if (ctx.isLoggedIn && vip === "yes") {
+      await fetch("/api/auth/users", {
+        method: "PUT",
         body: JSON.stringify({
-          email: emailUser,
+          user: emailUser,
+          count: countCoffee,
         }),
         headers: { "Content-Type": "application/json" },
       });
     }
-
+    if (tenCoffee && vip === "yes") {
+      await fetch("/api/auth/users", {
+        method: "PUT",
+        body: JSON.stringify({
+          user: emailUser,
+          count: -10,
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
+    }
     setSendReq(false);
     ctx.changeOrdersHandler();
     router.push("/Menu");
@@ -215,7 +236,9 @@ const Cart = (props) => {
         <span>{totalAmount}</span>
       </div>
       <div>
-        {!ctx.baristaChange && <button onClick={BackBuyHandler}>Back Menu</button>}
+        {!ctx.baristaChange && (
+          <button onClick={BackBuyHandler}>Back Menu</button>
+        )}
         {ctx.baristaChange && (
           <ChooesTable
             ordersData={ctx.dynamicItems}

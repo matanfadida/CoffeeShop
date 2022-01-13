@@ -5,31 +5,32 @@ import { useContext } from "react";
 import AuthContext from "../components/state/auth-context";
 
 const Pay = (props) => {
-
   let count = 0;
-  const ctx = useContext(AuthContext);
-  if (ctx.isLoggedIn) {
-    getSession().then((session) => ctx.setUser(session.user.email));
-    const allOrderedOfUser = props.orderedsData.filter(
-      (data) => data.user === ctx.getUser && data.vip === "yes"
-    );
+  console.log(props.usersData);
+  // const ctx = useContext(AuthContext);
+  // if (ctx.isLoggedIn) {
+  //   getSession().then((session) => ctx.setUser(session.user.email));
+  //   const allOrderedOfUser = props.orderedsData.filter(
+  //     (data) => data.user === ctx.getUser && data.vip === "yes"
+  //   );
 
-    const onlyCoffee = allOrderedOfUser.map((data) => data.data);
+  //   const onlyCoffee = allOrderedOfUser.map((data) => data.data);
 
-    for (const i in onlyCoffee) {
-      for (const j in onlyCoffee) {
-        if (
-          onlyCoffee[i][j] !== undefined &&
-          onlyCoffee[i][j].category === "coffee"
-        ) {
-          count += +onlyCoffee[i][j].amount;
-        }
-      }
-    }
-  }
+  //   for (const i in onlyCoffee) {
+  //     for (const j in onlyCoffee) {
+  //       if (
+  //         onlyCoffee[i][j] !== undefined &&
+  //         onlyCoffee[i][j].category === "coffee"
+  //       ) {
+  //         count += +onlyCoffee[i][j].amount;
+  //       }
+  //     }
+  //   }
+  // }
 
   return (
     <Cart
+      usersData={props.usersData}
       ordersData={props.ordersData}
       _id={props.id}
       totalAmount={props.totalAmount}
@@ -49,12 +50,12 @@ export async function getStaticProps() {
   const db = client.db();
 
   const resultOrders = db.collection("orders");
-  
+
   const ordersData = await resultOrders.find().toArray();
-  
-  const resultOrdereds = db.collection("ordered");
-  
-  const orderedsData = await resultOrdereds.find().toArray();
+
+  const resultUsers = db.collection("users");
+
+  const usersData = await resultUsers.find().toArray();
 
   const resultTables = db.collection("tables");
 
@@ -66,7 +67,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      guest:guestsData.map(guest => guest.guests),
+      guest: guestsData.map((guest) => guest.guests),
       idTable: tablesData[0]._id.toString(),
       tablesData: tablesData.map((table) => table.table),
       totalAmount: ordersData.map((data) => ({
@@ -78,11 +79,9 @@ export async function getStaticProps() {
         user: data.user,
         vip: data.vip,
       })),
-      id_: orderedsData.map((data) => ({ id: data._id.toString() })),
-      orderedsData: orderedsData.map((data) => ({
-        data: data.data,
-        user: data.user,
-        vip: data.vip,
+      usersData: usersData.map((data) => ({
+        email: data.email,
+        count: data.count,
       })),
     },
   };

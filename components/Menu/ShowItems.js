@@ -62,7 +62,7 @@ const ShowItems = (props) => {
       }),
       headers: { "Content-Type": "application/json" },
     });
-    router.push("/adminlogin/Menu");
+    router.push("/admin/Menu");
   };
 
   const addToCartHandler = (amount) => {

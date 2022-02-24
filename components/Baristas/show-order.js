@@ -1,8 +1,6 @@
 import CartItem from "../Cart/CartItem";
 
 const ShowOrder = (props) => {
-    // console.log(props.data.map(da => console.log(da.id)))
-
     return <div>{<ul>
         {props.ordersData.map((data) => (
           <CartItem

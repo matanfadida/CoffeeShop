@@ -1,23 +1,48 @@
 .div {
-    margin: 3rem auto;
-    width: 95%;
-    border-radius: 6px;
-    background-color: #EAF1FF;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    padding: 1rem;
-    text-align: center;
+  margin: 3rem auto;
+  width: 95%;
+  border-radius: 6px;
+  background-color: #eaf1ff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  text-align: center;
 }
 
 .div img {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 5px;
-    width: 150px;
-  }
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 150px;
+}
 
 .div label {
-    display: block;
-    color: #293559;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
+  display: block;
+  color: #293559;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.div input {
+  border: 2px solid #293559;
+  border-radius: 25px;
+  margin: 10px;
+}
+
+.div button {
+  font: inherit;
+  border: none;
+  background-color: #f5c945;
+  color: white;
+  padding: 0.25rem 1rem;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 25px;
+  font-weight: bold;
+}
+.div button:hover,
+.div button:active {
+  background-color: #293559;
+  color: #f5c945;
+}
+.div ul {
+  list-style-type: none;
+}

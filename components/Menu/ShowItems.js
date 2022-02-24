@@ -20,7 +20,12 @@ const ShowItems = (props) => {
   let ThursdayState = props.Thursday && ctx.isLoggedIn;
   let stateAvailability = <li>{props.availability}</li>;
 
-  if (partyState){
+  if(!ctx.isLoggedIn && props.category === 'alcohol'){
+    availability = false;
+    stateAvailability = <li>no</li>;
+  }
+  
+  if (partyState || props.openMenu){
     availability = true;
     stateAvailability = <li>yes</li>
   }
@@ -44,7 +49,7 @@ const ShowItems = (props) => {
   }
 
   const removeItems = async () => {
-    const response = await fetch("/api/items/data", {
+    await fetch("/api/items/data", {
       method: "DELETE",
       body: JSON.stringify({ id: props.id }),
       headers: { "Content-Type": "application/json" },
@@ -53,7 +58,7 @@ const ShowItems = (props) => {
   };
   const chengedPriceHandler = async () => {
     const enteredNewPrice = newPriceInputRef.current.value;
-    const response = await fetch("/api/items/data", {
+    await fetch("/api/items/data", {
       method: "PUT",
       body: JSON.stringify({
         id: props.id,

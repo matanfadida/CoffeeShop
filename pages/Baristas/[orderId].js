@@ -11,7 +11,6 @@ const BaristaChange = (props) => {
     ctx.cleanItemHandler();
     ctx.setOrderId(router.query.orderId);
     const user = props.ordersData.map(data => data.user)
-    console.log(user);
     ctx.setUser(user.toString());
     ctx.collectionChair(props.ordersData.map(data => data.chair))
     ctx.changeBaristasHandler();
@@ -54,7 +53,6 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context) {
   const id = context.params.orderId;
-  console.log(id);
   const client = await MongoClient.connect(
     "mongodb://matan:matanfadida@cluster0-shard-00-00.u8zmn.mongodb.net:27017,cluster0-shard-00-01.u8zmn.mongodb.net:27017,cluster0-shard-00-02.u8zmn.mongodb.net:27017/coffe-database?ssl=true&replicaSet=atlas-lrttc1-shard-0&authSource=admin&retryWrites=true&w=majority"
   );

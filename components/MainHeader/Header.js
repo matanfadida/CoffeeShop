@@ -15,10 +15,10 @@ const Header = () => {
     <header className={style.header}>
       <Link href="/"><h1>
         <FontAwesomeIcon icon={faCoffee} size="2x" />
-        F&R Coffee
+        M&F Coffee
       </h1></Link>
       <HeaderCartButton />
-      {ctx.isLoggedIn && <button className={style.button} onClick={loggoutHandler}>Loggout</button>}
+      {ctx.isLoggedIn && <Link href='/Menu'><button className={style.button} onClick={loggoutHandler}>Loggout</button></Link>}
       {!ctx.isLoggedIn && <Link href="/login"><button  className={style.button} >Login</button></Link>}
     </header>
   );

@@ -26,8 +26,7 @@ const LoginClient = () => {
     if (!result.error) {
       //asd
     }
-    setLoading(false);
-    // console.log(result);
+    // setLoading(false);
     router.replace("/Menu");
   };
 

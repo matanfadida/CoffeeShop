@@ -18,8 +18,6 @@ export async function getStaticProps() {
 
   const itemsData = await result.find().toArray();
 
-  // const countCoffee = await db.collection("orders").find().toArray();
-
   client.close();
   return {
     revalidate: 1,

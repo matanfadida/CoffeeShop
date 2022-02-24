@@ -1,0 +1,19 @@
+.img {
+  margin: auto;
+  width: 1000px;
+  border-radius: 6px;
+  padding: 1rem;
+  text-align: center;
+  margin-left: 300px;
+  height: 200px;
+}
+.div {
+  margin: auto;
+  width: 95%;
+  max-width: 65rem;
+  border-radius: 6px;
+  background-color: #eaf1ff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  text-align: center;
+}

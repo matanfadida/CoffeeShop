@@ -4,7 +4,11 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import ShowItems from "../Menu/ShowItems";
 import AuthContext from "../state/auth-context";
 import { useRouter } from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import Card from "../UI/Card";
 
+import style from "./Menu.module.css";
 
 const Menu = (props) => {
   const ctx = useContext(AuthContext);
@@ -12,8 +16,11 @@ const Menu = (props) => {
   const [itemsFilter, setItemsFilter] = useState(props.items);
   const [party, setParty] = useState("");
   const [Thursday, setThursday] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
+  const [getData, setGetData] = useState(false);
   const current = new Date();
-  const today = current.toISOString().split('T')[0];
+  const today = current.toISOString().split("T")[0];
+  const theDay = [props.items[Math.floor(Math.random() * props.items.length)]];
 
   let ShowLunch =
     current.getHours() <= 17 &&
@@ -47,67 +54,73 @@ const Menu = (props) => {
       return filterItem;
     }
     if (filterKey === "thursday") {
-      const filterItem = props.items.filter((item) => item.thursday === "yes")
+      const filterItem = props.items.filter((item) => item.thursday === "yes");
       return filterItem;
     }
     if (filterKey === "price increase") {
-      const filterItem = props.items.filter((item) => item.price > item.oldPrice)
+      const filterItem = props.items.filter(
+        (item) => item.price > item.oldPrice
+      );
       return filterItem;
     }
     if (filterKey === "price decrease") {
-      const filterItem = props.items.filter((item) => item.price < item.oldPrice)
+      const filterItem = props.items.filter(
+        (item) => item.price < item.oldPrice
+      );
       return filterItem;
     }
     if (filterKey === "the day") {
-      const filterItem = [props.items[Math.floor(Math.random() * props.items.length)]];
+      const filterItem = [
+        props.items[Math.floor(Math.random() * props.items.length)],
+      ];
       return filterItem;
     }
     if (filterKey === "most popular") {
       var maxItem = Math.max(...props.items.map((item) => item.count));
-      const filterItem = props.items.filter((item) => item.count === maxItem );
+      const filterItem = props.items.filter((item) => item.count === maxItem);
       return filterItem;
     }
   };
 
-  useEffect(async() => {
+  useEffect(async () => {
+    setGetData(true);
     if (current.getDay() === 4) {
       setThursday(true);
-      setItemsFilter(filterItems(current.getDay(), "thursday"))
-    }
-    else{
+      setItemsFilter(filterItems(current.getDay(), "thursday"));
+    } else {
       setThursday(false);
       setItemsFilter(props.items);
     }
-    
-    if(ctx.isLoggedIn || router.pathname.includes('/Baristas') ){
+
+    if (ctx.isLoggedIn || router.pathname.includes("/Baristas")) {
       const session = await getSession();
-        if(session){
-          const age = +session.user.age;
-          if (age >= 18){
-            await fetch("/api/items/data", {
-              method: "PUT",
-              body: JSON.stringify({
-                age: age,
-                availability: props.availability,
-                category: props.category,
-              }),
-              headers: { "Content-Type": "application/json" },
-            });
-          }
-        }
-        else if(router.pathname.includes('/Baristas')) {
+      if (session) {
+        setOpenMenu(true);
+        const age = +session.user.age;
+        if (age >= 18) {
           await fetch("/api/items/data", {
             method: "PUT",
             body: JSON.stringify({
-              age: 19,
-              availability: props.availability,
+              age: age,
+              availability: "yes",
               category: props.category,
             }),
             headers: { "Content-Type": "application/json" },
           });
         }
-    }
-    else{
+      } else if (router.pathname.includes("/Baristas")) {
+        setOpenMenu(true);
+        await fetch("/api/items/data", {
+          method: "PUT",
+          body: JSON.stringify({
+            age: 19,
+            availability: "yes",
+            category: props.category,
+          }),
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+    } else {
       await fetch("/api/items/data", {
         method: "PUT",
         body: JSON.stringify({
@@ -117,7 +130,8 @@ const Menu = (props) => {
         headers: { "Content-Type": "application/json" },
       });
     }
-  },[ctx.isLoggedIn])
+    setGetData(false);
+  }, [ctx.isLoggedIn]);
 
   const selectSitHandler = (event) => {
     if (event.target.value === "all") {
@@ -164,9 +178,8 @@ const Menu = (props) => {
     const selectDate = new Date(event.target.value).getDay();
     if (selectDate === 4) {
       setThursday(true);
-      setItemsFilter(filterItems(selectDate, "thursday"))
-    }
-    else{
+      setItemsFilter(filterItems(selectDate, "thursday"));
+    } else {
       setThursday(false);
       setItemsFilter(props.items);
     }
@@ -175,81 +188,88 @@ const Menu = (props) => {
   const showAsHandler = (event) => {
     if (event.target.value === "all") {
       setItemsFilter(props.items);
-    }
-    else if (event.target.value === "price increase"){
+    } else if (event.target.value === "price increase") {
       setItemsFilter(filterItems(event.target.value, "price increase"));
-    }
-    else if (event.target.value === "price decrease"){
+    } else if (event.target.value === "price decrease") {
       setItemsFilter(filterItems(event.target.value, "price decrease"));
-    }
-    else if (event.target.value === "the day"){
+    } else if (event.target.value === "the day") {
       setItemsFilter(filterItems(event.target.value, "the day"));
-    }
-    else if (event.target.value === "most popular"){
+    } else if (event.target.value === "most popular") {
       setItemsFilter(filterItems(event.target.value, "most popular"));
     }
-    
   };
+
+  if (getData) {
+    return (
+      <Card>
+        <FontAwesomeIcon icon={faSpinner} size="2x" spin={true} />
+        <p>Fetch items..</p>
+      </Card>
+    );
+  }
 
   return (
     <Fragment>
-      <label>Where Sit?</label>
-      <select name="sit" id="sit" onChange={selectSitHandler}>
-        <option value="all">All</option>
-        <option value="inside">inside</option>
-        <option value="outside">outside</option>
-      </select>
+      <div className={style.div}>
+        <label className={style.label}>Where Sit</label>
+        <select name="sit" id="sit" onChange={selectSitHandler}>
+          <option value="all">All</option>
+          <option value="inside">inside</option>
+          <option value="outside">outside</option>
+        </select>
 
-      <label>Category</label>
-      <select name="category" id="category" onChange={selectCatgoryHandler}>
-        <option value="all">All</option>
-        <option value="alcohol">alcohol</option>
-        <option value="coffee">coffee</option>
-      </select>
+        <label className={style.label}>Category</label>
+        <select name="category" id="category" onChange={selectCatgoryHandler}>
+          <option value="all">All</option>
+          <option value="alcohol">alcohol</option>
+          <option value="coffee">coffee</option>
+        </select>
 
-      <label>Price Range</label>
-      <select name="price" id="price" onChange={sortPriceHandler}>
-        <option value="all">All</option>
-        <option value="price">price</option>
-      </select>
+        <label className={style.label}>Price Range</label>
+        <select name="price" id="price" onChange={sortPriceHandler}>
+          <option value="all">All</option>
+          <option value="price">price</option>
+        </select>
 
-      <label>Show As</label>
-      <select name="show-as" id="show-as" onChange={showAsHandler}>
-        <option value="all">All</option>
-        <option value="price increase">price increase</option>
-        <option value="price decrease">price decrease</option>
-        <option value="most popular">most popular</option>
-        <option value="the day">a drink/dish of the day</option>
-      </select>
+        <label className={style.label}>Show As</label>
+        <select name="show-as" id="show-as" onChange={showAsHandler}>
+          <option value="all">All</option>
+          <option value="price increase">price increase</option>
+          <option value="price decrease">price decrease</option>
+          <option value="most popular">most popular</option>
+          <option value="the day">a drink/dish of the day</option>
+        </select>
 
-      <label>Date:</label>
-      <input
-        type="date"
-        id="date"
-        name="date"
-        defaultValue={today}
-        onChange={dateSelectHandler}
-      />
+        <label className={style.label}>Date:</label>
+        <input
+          type="date"
+          id="date"
+          name="date"
+          defaultValue={today}
+          onChange={dateSelectHandler}
+        />
 
-      {ShowLunch && (
-        <Fragment>
-          <label>lunch</label>
-          <select name="lunch" id="lunch" onChange={selectLunchHandler}>
-            <option value="all">All</option>
-            <option value="lunch">lunch</option>
-          </select>
-        </Fragment>
-      )}
+        {ShowLunch && (
+          <Fragment>
+            <label>lunch</label>
+            <select name="lunch" id="lunch" onChange={selectLunchHandler}>
+              <option value="all">All</option>
+              <option value="lunch">lunch</option>
+            </select>
+          </Fragment>
+        )}
 
-      {PartyTime && (
-        <Fragment>
-          <label>Party</label>
-          <select name="party" id="party" onChange={selectPartyHandler}>
-            <option value="all">All</option>
-            <option value="party">party</option>
-          </select>
-        </Fragment>
-      )}
+        {PartyTime && (
+          <Fragment>
+            <label>Party</label>
+            <select name="party" id="party" onChange={selectPartyHandler}>
+              <option value="all">All</option>
+              <option value="party">party</option>
+            </select>
+          </Fragment>
+        )}
+      </div>
+      {/* <img className={style.img} src={theDay[0].image} alt={theDay[0].name} /> */}
 
       <ul>
         {itemsFilter.map((item) => (
@@ -266,6 +286,7 @@ const Menu = (props) => {
             party={party}
             Thursday={Thursday}
             category={item.category}
+            openMenu={openMenu}
           />
         ))}
       </ul>

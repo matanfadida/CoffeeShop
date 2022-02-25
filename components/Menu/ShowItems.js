@@ -114,7 +114,6 @@ const ShowItems = (props) => {
       {availability && (
         <ItemsFrom id={props.id} onAddToCart={addToCartHandler} />
       )}
-      {/* <button onClick={}>Add to Cart</button> */}
     </div>
   );
 };

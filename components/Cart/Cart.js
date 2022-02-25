@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import AuthContext from "../state/auth-context";
 import Card from "../UI/Card";
 import CartItem from "./CartItem";
@@ -9,6 +9,9 @@ import Table from "../Clients/Table";
 import { getSession } from "next-auth/react";
 import ChooesTable from "../Clients/choos-table";
 import Link from "next/link";
+
+import style from "./Cart.module.css";
+import Button from "../UI/Button";
 
 const Cart = (props) => {
   const ctx = useContext(AuthContext);
@@ -232,13 +235,6 @@ const Cart = (props) => {
     <Card>
       {cartItems}
       <div>
-        <span>Total Amount</span>
-        <span>{totalAmount}</span>
-      </div>
-      <div>
-        {!ctx.baristaChange && (
-          <button onClick={BackBuyHandler}>Back Menu</button>
-        )}
         {ctx.baristaChange && (
           <ChooesTable
             ordersData={ctx.dynamicItems}
@@ -251,14 +247,6 @@ const Cart = (props) => {
         )}
         {!ctx.baristaChange && (
           <Fragment>
-            {ctx.ordered ? (
-              <Link href={`yourOrdered/${emailUser.toString()}`}>
-                change order
-              </Link>
-            ) : (
-              <button onClick={OrderHandler}>Order</button>
-            )}
-            <br />
             {!ctx.ordered && (
               <Fragment>
                 <label>Where Sit?</label>
@@ -301,6 +289,18 @@ const Cart = (props) => {
             )}
           </Fragment>
         )}
+      </div>
+      {!ctx.baristaChange && (
+        <Button onClick={BackBuyHandler}>Back Menu</Button>
+      )}
+      {ctx.ordered ? (
+        <Link href={`yourOrdered/${emailUser.toString()}`}>change order</Link>
+      ) : (
+        <Button onClick={OrderHandler}>Order</Button>
+      )}
+      <div>
+        <span className={style.total}>Total Amount</span>
+        <span>{totalAmount}</span>
       </div>
     </Card>
   );

@@ -1,70 +1,70 @@
 .header {
-    /* position: fixed; */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5rem;
-    background-color: #293559;
-    color: #ffd000;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10%;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-    z-index: 10;
-  }
+  /* position: fixed; */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5rem;
+  color: #ffd000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 10;
+  background-color: #293559;
+}
 
-  .button {
-    cursor: pointer;
-    font: inherit;
-    border: none;
-    background-color: #F5C945;
-    color: white;
-    padding: 0.75rem 3rem;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-radius: 25px;
-    font-weight: bold;
+.button {
+  cursor: pointer;
+  font: inherit;
+  border: none;
+  background-color: #f5c945;
+  color: white;
+  padding: 0.75rem 3rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 25px;
+  font-weight: bold;
+}
+
+.button:hover,
+.button:active {
+  background-color: #eaf1ff;
+  color: #f5c945;
+}
+
+.badge {
+  background-color: #293559;
+  padding: 0.25rem 1rem;
+  border-radius: 25px;
+  margin-left: 1rem;
+  font-weight: bold;
+}
+
+.button:hover .badge,
+.button:active .badge {
+  background-color: #293559;
+}
+
+.bump {
+  animation: bump 300ms ease-out;
+}
+
+@keyframes bump {
+  0% {
+    transform: scale(1);
   }
-  
-  .button:hover,
-  .button:active {
-    background-color: #EAF1FF;
-    color: #F5C945;
+  10% {
+    transform: scale(0.9);
   }
-  
-  .badge {
-    background-color: #293559;
-    padding: 0.25rem 1rem;
-    border-radius: 25px;
-    margin-left: 1rem;
-    font-weight: bold;
+  30% {
+    transform: scale(1.1);
   }
-  
-  .button:hover .badge,
-  .button:active .badge {
-    background-color: #293559;
+  50% {
+    transform: scale(1.15);
   }
-  
-  .bump {
-    animation: bump 300ms ease-out;
+  100% {
+    transform: scale(1);
   }
-  
-  @keyframes bump {
-    0% {
-      transform: scale(1);
-    }
-    10% {
-      transform: scale(0.9);
-    }
-    30% {
-      transform: scale(1.1);
-    }
-    50% {
-      transform: scale(1.15);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
+}

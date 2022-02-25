@@ -17,9 +17,11 @@ const Header = () => {
         <FontAwesomeIcon icon={faCoffee} size="2x" />
         M&F Coffee
       </h1></Link>
-      <HeaderCartButton />
       {ctx.isLoggedIn && <Link href='/Menu'><button className={style.button} onClick={loggoutHandler}>Loggout</button></Link>}
       {!ctx.isLoggedIn && <Link href="/login"><button  className={style.button} >Login</button></Link>}
+      <Link href="/login"><button  className={style.button} >Admin</button></Link>
+      <Link href="/login"><button  className={style.button} >Barista</button></Link>
+      <HeaderCartButton />
     </header>
   );
 };

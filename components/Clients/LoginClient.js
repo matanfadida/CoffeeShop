@@ -24,10 +24,12 @@ const LoginClient = () => {
       password: enteredPassword,
     });
     if (!result.error) {
-      //asd
+      console.log('aa')
+      console.log(result.error);
+    } else {
+      // router.replace("/Menu");
     }
-    // setLoading(false);
-    router.replace("/Menu");
+    setLoading(false);
   };
 
   const enteredEmailHandler = (event) => {

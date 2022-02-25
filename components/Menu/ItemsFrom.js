@@ -1,6 +1,4 @@
 import React, { useRef } from "react";
-// import Input from "../UI/Input/Input";
-// import styles from "./MealItemForm.module.css";
 
 const ItemsFrom = props => {
     const amountAdd = useRef();
